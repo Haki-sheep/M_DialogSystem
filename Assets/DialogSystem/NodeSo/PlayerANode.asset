@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 577abdba421cfc443accb8cce6ccf192, type: 3}
+  m_Name: PlayerANode
+  m_EditorClassIdentifier: 
+  nodeId: 1
+  speakType: 1
+  speakerName: 
+  dialogText: "\u6211\u662F\u73A9\u5BB6"
+  isOptionNode: 0
+  linkList:
+  - toNode: {fileID: 11400000, guid: e09b66dc1410044478c832b5038a62ab, type: 2}
+    condition:
+      e_Condition: 0
+      key: 
+      targetBool: 0
+  choiceList: []

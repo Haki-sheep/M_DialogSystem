@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e0250bb1ed372d4989b5fa2d62966f5, type: 3}
+  m_Name: New Dialogue Graph
+  m_EditorClassIdentifier: 
+  graphId: 0
+  graphName: 
+  startNode: {fileID: 11400000, guid: f69a3dbe35fae724ebb4587fabc1a1d2, type: 2}
+  nodeList:
+  - {fileID: 11400000, guid: f69a3dbe35fae724ebb4587fabc1a1d2, type: 2}
+  - {fileID: 11400000, guid: e09b66dc1410044478c832b5038a62ab, type: 2}
+  - {fileID: 11400000, guid: 603f1a912a4ed424c8333b9c15686d17, type: 2}
+  - {fileID: 11400000, guid: 04a4b89ca5404234ead5d912ba0f50ff, type: 2}
+  nodeLayouts:
+  - node: {fileID: 11400000, guid: f69a3dbe35fae724ebb4587fabc1a1d2, type: 2}
+    position: {x: 514.28577, y: 396}
+  - node: {fileID: 11400000, guid: e09b66dc1410044478c832b5038a62ab, type: 2}
+    position: {x: 724.5714, y: 396}
+  - node: {fileID: 11400000, guid: 603f1a912a4ed424c8333b9c15686d17, type: 2}
+    position: {x: 910.28577, y: 339.42856}
+  - node: {fileID: 11400000, guid: 04a4b89ca5404234ead5d912ba0f50ff, type: 2}
+    position: {x: 910.8572, y: 459.42856}

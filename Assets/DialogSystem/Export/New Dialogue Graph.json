@@ -1,0 +1,93 @@
+﻿{
+  "graphId": 0,
+  "graphName": "",
+  "assetName": "New Dialogue Graph",
+  "assetPath": "Assets/DialogSystem/NodeSo/New Dialogue Graph.asset",
+  "startNodeId": 1,
+  "nodes": [
+    {
+      "nodeId": 1,
+      "assetName": "PlayerANode",
+      "speakType": "Player",
+      "speakerName": "",
+      "dialogText": "我是玩家",
+      "isOptionNode": false,
+      "layout": {
+        "x": 514.285767,
+        "y": 396.0
+      },
+      "links": [
+        {
+          "toNodeId": 2,
+          "condition": {
+            "conditionType": "None",
+            "key": "",
+            "targetBool": false
+          }
+        }
+      ],
+      "choices": []
+    },
+    {
+      "nodeId": 2,
+      "assetName": "NpcBNode",
+      "speakType": "NPC",
+      "speakerName": "",
+      "dialogText": "我是NPC",
+      "isOptionNode": true,
+      "layout": {
+        "x": 724.5714,
+        "y": 396.0
+      },
+      "links": [],
+      "choices": [
+        {
+          "labelText": "",
+          "toNodeId": 3,
+          "condition": {
+            "conditionType": "None",
+            "key": "",
+            "targetBool": false
+          }
+        },
+        {
+          "labelText": "",
+          "toNodeId": 4,
+          "condition": {
+            "conditionType": "None",
+            "key": "",
+            "targetBool": false
+          }
+        }
+      ]
+    },
+    {
+      "nodeId": 3,
+      "assetName": "NewNode",
+      "speakType": "Node",
+      "speakerName": "",
+      "dialogText": "我是A后选项",
+      "isOptionNode": false,
+      "layout": {
+        "x": 910.285767,
+        "y": 339.428558
+      },
+      "links": [],
+      "choices": []
+    },
+    {
+      "nodeId": 4,
+      "assetName": "New Dialog Node",
+      "speakType": "Node",
+      "speakerName": "",
+      "dialogText": "我是B后选项",
+      "isOptionNode": false,
+      "layout": {
+        "x": 910.8572,
+        "y": 459.428558
+      },
+      "links": [],
+      "choices": []
+    }
+  ]
+}

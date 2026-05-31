@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 577abdba421cfc443accb8cce6ccf192, type: 3}
+  m_Name: NpcBNode
+  m_EditorClassIdentifier: 
+  nodeId: 2
+  speakType: 2
+  speakerName: 
+  dialogText: "\u6211\u662FNPC"
+  isOptionNode: 1
+  linkList: []
+  choiceList:
+  - labelText: 
+    toNode: {fileID: 11400000, guid: 603f1a912a4ed424c8333b9c15686d17, type: 2}
+    condition:
+      e_Condition: 0
+      key: 
+      targetBool: 0
+  - labelText: 
+    toNode: {fileID: 11400000, guid: 04a4b89ca5404234ead5d912ba0f50ff, type: 2}
+    condition:
+      e_Condition: 0
+      key: 
+      targetBool: 0
