@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Miemie.DialogSystem
 {
+    /// <summary>
+    /// 条件类型
+    /// </summary>
     public enum E_Condition
     {
         None,
