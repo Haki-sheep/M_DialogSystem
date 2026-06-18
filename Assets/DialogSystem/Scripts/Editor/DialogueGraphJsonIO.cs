@@ -153,7 +153,7 @@ namespace Miemie.DialogSystem.Editor
 
         static DialogueNodeJson ToNodeModel(DialogueGraph graph, DialogueNode node)
         {
-            var layout = graph.GetLayout(node);
+            var layout = DialogueGraphLayoutStore.GetPosition(graph, node);
             var nodeJson = new DialogueNodeJson
             {
                 nodeId = node.NodeId,
@@ -172,7 +172,7 @@ namespace Miemie.DialogSystem.Editor
                     if (choice == null)
                         continue;
 
-                    nodeJson.choices.Add(new DialogueChoiceJson
+                    nodeJson.choiceList.Add(new DialogueChoiceJson
                     {
                         labelText = choice.labelText,
                         toNodeId = choice.toNode != null ? choice.toNode.NodeId : 0,
@@ -187,7 +187,7 @@ namespace Miemie.DialogSystem.Editor
                     if (link == null)
                         continue;
 
-                    nodeJson.links.Add(new DialogueLinkJson
+                    nodeJson.linkList.Add(new DialogueLinkJson
                     {
                         toNodeId = link.toNode != null ? link.toNode.NodeId : 0,
                         condition = ToConditionModel(link.condition),
@@ -208,6 +208,7 @@ namespace Miemie.DialogSystem.Editor
                 conditionType = condition.e_Condition.ToString(),
                 key = condition.key,
                 targetBool = condition.targetBool,
+                targetFloat = condition.targetFloat,
             };
         }
 
@@ -260,9 +261,9 @@ namespace Miemie.DialogSystem.Editor
                     continue;
 
                 if (nodeJson.isOptionNode)
-                    ApplyChoices(node, nodeJson.choices, idMap);
+                    ApplyChoices(node, nodeJson.choiceList, idMap);
                 else
-                    ApplyLinks(node, nodeJson.links, idMap);
+                    ApplyLinks(node, nodeJson.linkList, idMap);
             }
 
             var graphSo = new SerializedObject(graph);
@@ -270,16 +271,18 @@ namespace Miemie.DialogSystem.Editor
             graphSo.FindProperty("graphName").stringValue = model.graphName ?? string.Empty;
             graphSo.FindProperty("startNode").objectReferenceValue =
                 model.startNodeId != 0 && idMap.TryGetValue(model.startNodeId, out var startNode) ? startNode : null;
-            graphSo.FindProperty("nodeLayouts").ClearArray();
             graphSo.ApplyModifiedPropertiesWithoutUndo();
 
+            var importedLayouts = new List<(DialogueNode node, Vector2 position)>();
             foreach (var nodeJson in model.nodes)
             {
                 if (nodeJson?.layout == null || !idMap.TryGetValue(nodeJson.nodeId, out var node))
                     continue;
 
-                graph.SetLayout(node, new Vector2(nodeJson.layout.x, nodeJson.layout.y));
+                importedLayouts.Add((node, new Vector2(nodeJson.layout.x, nodeJson.layout.y)));
             }
+
+            DialogueGraphLayoutStore.ReplaceGraphLayouts(graph, importedLayouts);
 
             EditorUtility.SetDirty(graph);
             foreach (var node in idMap.Values)
@@ -372,6 +375,7 @@ namespace Miemie.DialogSystem.Editor
             conditionProp.FindPropertyRelative("e_Condition").enumValueIndex = (int)conditionType;
             conditionProp.FindPropertyRelative("key").stringValue = conditionJson?.key ?? string.Empty;
             conditionProp.FindPropertyRelative("targetBool").boolValue = conditionJson?.targetBool ?? false;
+            conditionProp.FindPropertyRelative("targetFloat").floatValue = conditionJson?.targetFloat ?? 0f;
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Miemie.DialogSystem.Editor
         readonly Dictionary<DialogueNode, DialogueGraph> nodeToGraph = new();
         readonly Dictionary<DialogueNode, string> nodeLabelCache = new();
 
-        [MenuItem("Tools/Dialog System")]
+        [MenuItem("Tools/MmDialogWindow")]
         static void Open()
         {
             var window = GetWindow<DialogueGraphEditorWindow>();

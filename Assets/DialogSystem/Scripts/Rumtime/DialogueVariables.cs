@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Miemie.DialogSystem
@@ -9,52 +7,83 @@ namespace Miemie.DialogSystem
     [Serializable]
     public class DialogueVariables
     {
-        [SerializeField] private List<FlagData> flagDataList = new();
+        [SerializeField] List<BoolEntry> boolEntries = new();
+        [SerializeField] List<FloatEntry> floatEntries = new();
 
-        /// <summary>
-        /// 获取标志值
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
         public bool GetBool(string key, bool defaultValue = false)
         {
-            if (string.IsNullOrEmpty(key)) return defaultValue;
-            foreach (var e in flagDataList)
+            if (string.IsNullOrEmpty(key))
+                return defaultValue;
+
+            foreach (var entry in boolEntries)
             {
-                if (e.key == key) return e.value;
+                if (entry.key == key)
+                    return entry.value;
             }
+
             return defaultValue;
         }
 
-        /// <summary>
-        /// 设置标志值
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
         public void SetBool(string key, bool value)
         {
-            for (int i = 0; i < flagDataList.Count; i++)
+            if (string.IsNullOrEmpty(key))
+                return;
+
+            for (int i = 0; i < boolEntries.Count; i++)
             {
-                if (flagDataList[i].key == key)
-                {
-                    flagDataList[i] = new FlagData { key = key, value = value };
-                    return;
-                }
+                if (boolEntries[i].key != key)
+                    continue;
+
+                boolEntries[i] = new BoolEntry { key = key, value = value };
+                return;
             }
-            flagDataList.Add(new FlagData { key = key, value = value });
+
+            boolEntries.Add(new BoolEntry { key = key, value = value });
         }
 
-        /// <summary>
-        /// 标志数据
-        /// </summary>
+        public float GetFloat(string key, float defaultValue = 0f)
+        {
+            if (string.IsNullOrEmpty(key))
+                return defaultValue;
+
+            foreach (var entry in floatEntries)
+            {
+                if (entry.key == key)
+                    return entry.value;
+            }
+
+            return defaultValue;
+        }
+
+        public void SetFloat(string key, float value)
+        {
+            if (string.IsNullOrEmpty(key))
+                return;
+
+            for (int i = 0; i < floatEntries.Count; i++)
+            {
+                if (floatEntries[i].key != key)
+                    continue;
+
+                floatEntries[i] = new FloatEntry { key = key, value = value };
+                return;
+            }
+
+            floatEntries.Add(new FloatEntry { key = key, value = value });
+        }
+
         [Serializable]
-        private struct FlagData
+        struct BoolEntry
         {
             public string key;
             public bool value;
         }
+
+        [Serializable]
+        struct FloatEntry
+        {
+            public string key;
+            public float value;
+        }
     }
-
-
 }

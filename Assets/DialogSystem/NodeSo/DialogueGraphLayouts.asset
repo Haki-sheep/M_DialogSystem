@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: DialogueGraphLayouts
+  m_EditorClassIdentifier: Assembly-CSharp-Editor:Miemie.DialogSystem.Editor:DialogueGraphLayoutDatabase
+  graphs:
+  - graph: {fileID: 11400000, guid: 81d8bbd78bb4c784dacf4900e11c117c, type: 2}
+    layouts:
+    - node: {fileID: 11400000, guid: 603f1a912a4ed424c8333b9c15686d17, type: 2}
+      position: {x: 487.42856, y: -38.857143}
+    - node: {fileID: 11400000, guid: 04a4b89ca5404234ead5d912ba0f50ff, type: 2}
+      position: {x: 488.00003, y: 78.28572}
+    - node: {fileID: 11400000, guid: e09b66dc1410044478c832b5038a62ab, type: 2}
+      position: {x: 246.85715, y: 0}

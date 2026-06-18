@@ -117,8 +117,7 @@ namespace Miemie.DialogSystem.Editor
 
             hasSavedLayout = true;
             savedLayoutPosition = position;
-            graph.SetLayout(Node, position);
-            EditorUtility.SetDirty(graph);
+            DialogueGraphLayoutStore.SetPosition(graph, Node, position);
         }
     }
 
@@ -416,6 +415,7 @@ namespace Miemie.DialogSystem.Editor
                 return;
 
             currentGraph.RemoveNode(nodeView.Node);
+            DialogueGraphLayoutStore.RemoveNode(currentGraph, nodeView.Node);
             nodeViews.Remove(nodeView.Node);
             EditorUtility.SetDirty(currentGraph);
             ownerWindow.ForceMenuTreeRebuild();
@@ -455,7 +455,7 @@ namespace Miemie.DialogSystem.Editor
                     if (node == null)
                         continue;
 
-                    var layout = graph.GetLayout(node);
+                    var layout = DialogueGraphLayoutStore.GetPosition(graph, node);
                     if (layout == Vector2.zero)
                         layout = new Vector2(260f * index, 80f * (index % 4));
 
@@ -498,7 +498,7 @@ namespace Miemie.DialogSystem.Editor
             if (currentGraph == null || node == null)
                 return;
 
-            currentGraph.SetStartNode(node);
+            currentGraph.SetStartNodeInEditorWindow(node);
             EditorUtility.SetDirty(currentGraph);
             HighlightStartNode();
         }

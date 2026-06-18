@@ -8,18 +8,22 @@ namespace Miemie.DialogSystem
     public class DialogueNode : ScriptableObject
     {
         #region 字段
-        // 本节点信息
-        [SerializeField] private int nodeId;
+        /// <summary> 节点ID </summary>
+        [SerializeField]
+        private int nodeId;
+        /// <summary> 说话类型 </summary>
         [SerializeField] private SpeakEnums speakType;
+        /// <summary> 说话者名称 </summary>
         [SerializeField] private string speakerName;
+        /// <summary> 对话文本 </summary>
         [SerializeField] private string dialogText;
 
-        // 下一节点信息
+        /// <summary> 是否是选项节点 </summary>
         [SerializeField] private bool isOptionNode;
-        // 非选项则直接跳转到下一个节点
+        /// <summary> 非选项则直接跳转到下一个节点 </summary>
         [ShowIf("@!isOptionNode")][SerializeField] 
         private List<DialogueLink> linkList = new();
-        // 选项节点列表 
+        /// <summary> 选项节点列表 </summary>
         [ShowIf("@isOptionNode")][SerializeField] 
         private List<DialogueChoice> choiceList = new();
 
@@ -36,6 +40,9 @@ namespace Miemie.DialogSystem
         #endregion
 
         #region 方法
+        /// <summary>
+        /// 验证节点
+        /// </summary>
         public void VaildNode()
         {
             if (isOptionNode)

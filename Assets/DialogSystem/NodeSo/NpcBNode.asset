@@ -25,9 +25,11 @@ MonoBehaviour:
       e_Condition: 0
       key: 
       targetBool: 0
+      targetFloat: 0
   - labelText: 
     toNode: {fileID: 11400000, guid: 04a4b89ca5404234ead5d912ba0f50ff, type: 2}
     condition:
       e_Condition: 0
       key: 
       targetBool: 0
+      targetFloat: 0

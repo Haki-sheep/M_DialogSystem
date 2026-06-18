@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Miemie.DialogSystem
 {
@@ -12,43 +11,66 @@ namespace Miemie.DialogSystem
     {
         None,
         BoolEquals,
+        FloatEquals,
+        FloatNotEquals,
+        FloatGreater,
+        FloatGreaterOrEqual,
+        FloatLess,
+        FloatLessOrEqual,
     }
 
     /// <summary>
-    /// 对话条件类
-    /// 该类就是"条件"本身
+    /// 对话条件
     /// </summary>
     [Serializable]
     public class DialogueCondition
     {
         public E_Condition e_Condition;
         public string key;
-        // 目标值
+
+        [ShowIf(nameof(IsBoolCondition))]
         public bool targetBool;
 
-        // 无条件
+        [ShowIf(nameof(IsFloatCondition))]
+        public float targetFloat;
+
         public bool NoneContion => e_Condition == E_Condition.None;
+
+        bool IsBoolCondition => e_Condition == E_Condition.BoolEquals;
+        bool IsFloatCondition => IsFloatCompare(e_Condition);
 
         /// <summary>
         /// 判断条件是否满足
         /// </summary>
-        /// <param name="vars"></param>
-        /// <returns></returns>
         public bool MeetCondition(DialogueVariables vars)
         {
-            if (NoneContion || vars is null) return true;
+            if (NoneContion || vars == null)
+                return true;
 
             return e_Condition switch
             {
                 E_Condition.BoolEquals => vars.GetBool(key) == targetBool,
+                E_Condition.FloatEquals => Mathf.Approximately(vars.GetFloat(key), targetFloat),
+                E_Condition.FloatNotEquals => !Mathf.Approximately(vars.GetFloat(key), targetFloat),
+                E_Condition.FloatGreater => vars.GetFloat(key) > targetFloat,
+                E_Condition.FloatGreaterOrEqual => vars.GetFloat(key) >= targetFloat,
+                E_Condition.FloatLess => vars.GetFloat(key) < targetFloat,
+                E_Condition.FloatLessOrEqual => vars.GetFloat(key) <= targetFloat,
                 _ => false,
             };
         }
+
+        public static bool IsFloatCompare(E_Condition type) =>
+            type is E_Condition.FloatEquals
+                or E_Condition.FloatNotEquals
+                or E_Condition.FloatGreater
+                or E_Condition.FloatGreaterOrEqual
+                or E_Condition.FloatLess
+                or E_Condition.FloatLessOrEqual;
     }
 
     /// <summary>
-    /// 对话连线类
-    /// 该类就是"条件"与"节点"之间的连线
+    /// 对话连线
     /// </summary>
     [Serializable]
     public class DialogueLink
@@ -56,36 +78,21 @@ namespace Miemie.DialogSystem
         public DialogueNode toNode;
         public DialogueCondition condition;
 
-        /// <summary>
-        /// 判断是否可以通行
-        /// </summary>
-        /// <param name="vars"></param>
-        /// <returns></returns>
-        public bool CanPass(DialogueVariables vars)
-        {
-            return this.condition.NoneContion || this.condition.MeetCondition(vars);
-        }
+        public bool CanPass(DialogueVariables vars) =>
+            condition == null || condition.NoneContion || condition.MeetCondition(vars);
     }
 
-
     /// <summary>
-    /// 对话选项类
-    /// 该类就是"选项"本身
+    /// 对话选项
     /// </summary>
     [Serializable]
-    public class DialogueChoice{
+    public class DialogueChoice
+    {
         public string labelText;
         public DialogueNode toNode;
-        // 该条件一般用于判断是否显示该选项
         public DialogueCondition condition;
 
-        /// <summary>
-        /// 判断是否可以通行
-        /// </summary>
-        /// <param name="vars"></param>
-        /// <returns></returns>
-        public bool CanPass(DialogueVariables vars){
-            return this.condition.NoneContion || this.condition.MeetCondition(vars);
-        }
+        public bool CanPass(DialogueVariables vars) =>
+            condition == null || condition.NoneContion || condition.MeetCondition(vars);
     }
 }
