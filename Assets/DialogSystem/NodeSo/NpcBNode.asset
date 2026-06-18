@@ -17,19 +17,35 @@ MonoBehaviour:
   speakerName: 
   dialogText: "\u6211\u662FNPC"
   isOptionNode: 1
+  nextTransition:
+    toNode: {fileID: 0}
+    conditions: []
   linkList: []
   choiceList:
   - labelText: 
-    toNode: {fileID: 11400000, guid: 603f1a912a4ed424c8333b9c15686d17, type: 2}
+    toNode: {fileID: 11400000, guid: 67231b5ba10cd3d4c879c8fb548580ed, type: 2}
     condition:
       e_Condition: 0
       key: 
       targetBool: 0
       targetFloat: 0
+      targetInt: 0
+    conditions: []
   - labelText: 
-    toNode: {fileID: 11400000, guid: 04a4b89ca5404234ead5d912ba0f50ff, type: 2}
+    toNode: {fileID: 11400000, guid: 132043c61f731e04da43aac35b89eda1, type: 2}
     condition:
       e_Condition: 0
       key: 
       targetBool: 0
       targetFloat: 0
+      targetInt: 0
+    conditions: []
+  - labelText: "\u9009\u98793"
+    toNode: {fileID: 0}
+    condition:
+      e_Condition: 0
+      key: 
+      targetBool: 0
+      targetFloat: 0
+      targetInt: 0
+    conditions: []

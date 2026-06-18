@@ -11,6 +11,7 @@ namespace Miemie.DialogSystem
         [SerializeField, ReadOnly] private DialogueNode currentNode;
 
         readonly List<DialogueChoice> availableChoices = new();
+        readonly List<string> triggerBuffer = new();
 
         public DialogueNode CurrentNode => currentNode;
 
@@ -52,6 +53,8 @@ namespace Miemie.DialogSystem
                 Debug.LogError("Start node is null");
                 return;
             }
+
+            variables?.ApplyDefaults(dialogueGraph.Parameters);
             GoTo(dialogueGraph.StartNode);
         }
 
@@ -67,7 +70,6 @@ namespace Miemie.DialogSystem
         /// <summary>
         /// 跳转到节点
         /// </summary>
-        /// <param name="node"></param>
         public void GoTo(DialogueNode node)
         {
             if (node == null)
@@ -98,50 +100,38 @@ namespace Miemie.DialogSystem
                 return;
             }
 
-            var link = PickLink(currentNode);
-            if (link == null)
+            var transition = currentNode.NextTransition;
+            if (transition?.toNode == null)
             {
-                Debug.Log("没有满足条件的出口");
+                Debug.Log("没有下一节点");
                 return;
             }
 
-            // 跳转到连线节点
-            GoTo(link.toNode);
+            if (!transition.CanPass(variables))
+            {
+                Debug.Log("连线条件未满足");
+                return;
+            }
+
+            ConsumeTriggers(transition);
+            GoTo(transition.toNode);
         }
 
         /// <summary>
         /// 选择选项
         /// </summary>
-        /// <param name="index"></param>
         public void SelectOption(int index)
         {
             RefreshAvailableChoices();
             if (index < 0 || index >= availableChoices.Count) return;
 
-            GoTo(availableChoices[index].toNode);
-        }
-
-        /// <summary>
-        /// 选择连线
-        /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        public DialogueLink PickLink(DialogueNode node)
-        {
-            if (node.LinkList == null) return null;
-
-            foreach (var link in node.LinkList)
-            {
-                if (link == null || link.toNode == null) continue;
-                if (link.CanPass(variables))
-                    return link;
-            }
-            return null;
+            var choice = availableChoices[index];
+            ConsumeTriggers(choice);
+            GoTo(choice.toNode);
         }
 
         /// <summary>
         /// 刷新可用选项
-        /// 该方法用于刷新当前节点可用的选项
         /// </summary>
         public void RefreshAvailableChoices()
         {
@@ -158,7 +148,6 @@ namespace Miemie.DialogSystem
 
         /// <summary>
         /// 日志选项
-        /// 该方法用于日志当前节点可用的选项
         /// </summary>
         public void LogOptions()
         {
@@ -171,6 +160,28 @@ namespace Miemie.DialogSystem
 
             for (int i = 0; i < availableChoices.Count; i++)
                 Debug.Log($"  [{i + 1}] {availableChoices[i].labelText}");
+        }
+
+        void ConsumeTriggers(DialogueTransition transition)
+        {
+            if (transition == null || variables == null)
+                return;
+
+            triggerBuffer.Clear();
+            transition.CollectTriggerKeys(triggerBuffer);
+            foreach (var key in triggerBuffer)
+                variables.ResetTrigger(key);
+        }
+
+        void ConsumeTriggers(DialogueChoice choice)
+        {
+            if (choice == null || variables == null)
+                return;
+
+            triggerBuffer.Clear();
+            choice.CollectTriggerKeys(triggerBuffer);
+            foreach (var key in triggerBuffer)
+                variables.ResetTrigger(key);
         }
     }
 }

@@ -93,6 +93,19 @@ namespace Miemie.DialogSystem.Editor
             SaveDatabase();
         }
 
+        /// <summary>
+        /// 删除整张图的布局数据
+        /// </summary>
+        public static void RemoveGraph(DialogueGraph graph)
+        {
+            if (graph == null)
+                return;
+
+            var db = GetDatabase();
+            db.graphs.RemoveAll(e => e.graph == graph);
+            SaveDatabase();
+        }
+
         public static void ReplaceGraphLayouts(DialogueGraph graph, IEnumerable<(DialogueNode node, Vector2 position)> layouts)
         {
             if (graph == null)

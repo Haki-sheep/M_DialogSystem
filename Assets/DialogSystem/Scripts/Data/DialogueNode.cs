@@ -20,13 +20,18 @@ namespace Miemie.DialogSystem
 
         /// <summary> 是否是选项节点 </summary>
         [SerializeField] private bool isOptionNode;
-        /// <summary> 非选项则直接跳转到下一个节点 </summary>
-        [ShowIf("@!isOptionNode")][SerializeField] 
-        private List<DialogueLink> linkList = new();
-        /// <summary> 选项节点列表 </summary>
-        [ShowIf("@isOptionNode")][SerializeField] 
-        private List<DialogueChoice> choiceList = new();
 
+        /// <summary> 普通节点下一跳 </summary>
+        [HideInInspector][SerializeField]
+        private DialogueTransition nextTransition = new();
+
+        /// <summary> 旧版连线列表 仅迁移用 </summary>
+        [HideInInspector][SerializeField]
+        private List<DialogueLink> linkList = new();
+
+        /// <summary> 选项出口 </summary>
+        [HideInInspector][SerializeField]
+        private List<DialogueChoice> choiceList = new();
         #endregion
 
         #region 属性
@@ -35,7 +40,14 @@ namespace Miemie.DialogSystem
         public string SpeakerName => speakerName;
         public string DialogText { get => dialogText; set => dialogText = value; }
         public bool IsOptionNode { get => isOptionNode; set => isOptionNode = value; }
-        public List<DialogueLink> LinkList => linkList;
+        public DialogueTransition NextTransition
+        {
+            get
+            {
+                EnsureNextTransitionMigrated();
+                return nextTransition;
+            }
+        }
         public List<DialogueChoice> ChoiceList => choiceList;
         #endregion
 
@@ -48,114 +60,82 @@ namespace Miemie.DialogSystem
             if (isOptionNode)
             {
                 if (choiceList is null || choiceList.Count == 0)
-                {
                     Debug.LogError("ChoiceList is null or empty");
-                }
             }
-            else if (linkList is null || linkList.Count == 0)
+            else if (NextTransition?.toNode == null)
             {
                 Debug.LogWarning("Node is Over");
             }
         }
 
         /// <summary>
-        /// 添加连线
+        /// 设置下一节点
         /// </summary>
-        /// <param name="link"></param>
-        public void AddLink(DialogueLink link)
+        public void SetNextNode(DialogueNode node)
         {
-            if (linkList is null)
-            {
-                linkList = new List<DialogueLink>();
-            }
-            linkList.Add(link);
+            EnsureNextTransitionMigrated();
+            if (nextTransition == null)
+                nextTransition = new DialogueTransition();
+            nextTransition.toNode = node;
         }
 
         /// <summary>
-        /// 移除连线
+        /// 清除下一节点
         /// </summary>
-        /// <param name="link"></param>
-        public void RemoveLink(DialogueLink link)
+        public void ClearNextNode()
         {
-            if (linkList is not null)
-            {
-                linkList.Remove(link);
-            }
+            if (nextTransition != null)
+                nextTransition.toNode = null;
         }
 
         /// <summary>
         /// 添加选项
         /// </summary>
-        /// <param name="choice"></param>
         public void AddChoice(DialogueChoice choice)
         {
             if (choiceList is null)
-            {
                 choiceList = new List<DialogueChoice>();
-            }
             choiceList.Add(choice);
         }
 
         /// <summary>
         /// 移除选项
         /// </summary>
-        /// <param name="choice"></param>
         public void RemoveChoice(DialogueChoice choice)
         {
             if (choiceList is not null)
-            {
                 choiceList.Remove(choice);
-            }
         }
 
         /// <summary>
-        /// 获取连线
+        /// 从末尾删除一个选项 至少保留一个
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public DialogueLink GetLink(int index)
+        public bool TryRemoveLastChoice()
         {
-            if (linkList is not null && index >= 0 && index < linkList.Count)
-            {
-                return linkList[index];
-            }
-            return null;
+            if (choiceList is null || choiceList.Count <= 1)
+                return false;
+
+            choiceList.RemoveAt(choiceList.Count - 1);
+            return true;
         }
 
         /// <summary>
         /// 获取选项
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
         public DialogueChoice GetChoice(int index)
         {
             if (choiceList is not null && index >= 0 && index < choiceList.Count)
-            {
                 return choiceList[index];
-            }
             return null;
         }
 
-        /// <summary>
-        /// 清空连线
-        /// </summary>
-        public void ClearLinks()
-        {
-            if (linkList is not null)
-            {
-                linkList.Clear();
-            }
-        }
-        
         /// <summary>
         /// 清空选项
         /// </summary>
         public void ClearChoices()
         {
             if (choiceList is not null)
-            {
                 choiceList.Clear();
-            }
         }
 
         /// <summary>
@@ -166,6 +146,25 @@ namespace Miemie.DialogSystem
             Debug.Log($"[{nodeId}] {speakerName}: {dialogText}");
         }
 
+        void EnsureNextTransitionMigrated()
+        {
+            if (nextTransition == null)
+                nextTransition = new DialogueTransition();
+
+            if (nextTransition.toNode != null || linkList == null || linkList.Count == 0)
+                return;
+
+            var legacy = linkList[0];
+            if (legacy == null)
+                return;
+
+            nextTransition.toNode = legacy.toNode;
+            foreach (var condition in legacy.GetEffectiveConditions())
+            {
+                if (condition != null && !condition.NoneContion)
+                    nextTransition.Conditions.Add(condition);
+            }
+        }
         #endregion
     }
 }

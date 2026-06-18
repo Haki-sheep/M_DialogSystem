@@ -11,22 +11,26 @@
       "speakType": "Player",
       "speakerName": "",
       "dialogText": "我是玩家",
-      "isOptionNode": false,
+      "isOptionNode": true,
       "layout": {
-        "x": 514.285767,
-        "y": 396.0
+        "x": 0.0,
+        "y": 0.0
       },
-      "links": [
+      "nextNodeId": 0,
+      "transitionConditions": [],
+      "choiceList": [
         {
+          "labelText": "选项1",
           "toNodeId": 2,
-          "condition": {
-            "conditionType": "None",
-            "key": "",
-            "targetBool": false
-          }
+          "conditions": []
+        },
+        {
+          "labelText": "选项2",
+          "toNodeId": 0,
+          "conditions": []
         }
       ],
-      "choices": []
+      "linkList": []
     },
     {
       "nodeId": 2,
@@ -36,30 +40,29 @@
       "dialogText": "我是NPC",
       "isOptionNode": true,
       "layout": {
-        "x": 724.5714,
-        "y": 396.0
+        "x": 240.000031,
+        "y": -11.4285717
       },
-      "links": [],
-      "choices": [
+      "nextNodeId": 0,
+      "transitionConditions": [],
+      "choiceList": [
         {
           "labelText": "",
           "toNodeId": 3,
-          "condition": {
-            "conditionType": "None",
-            "key": "",
-            "targetBool": false
-          }
+          "conditions": []
         },
         {
           "labelText": "",
           "toNodeId": 4,
-          "condition": {
-            "conditionType": "None",
-            "key": "",
-            "targetBool": false
-          }
+          "conditions": []
+        },
+        {
+          "labelText": "选项3",
+          "toNodeId": 0,
+          "conditions": []
         }
-      ]
+      ],
+      "linkList": []
     },
     {
       "nodeId": 3,
@@ -69,11 +72,13 @@
       "dialogText": "我是A后选项",
       "isOptionNode": false,
       "layout": {
-        "x": 910.285767,
-        "y": 339.428558
+        "x": 487.428558,
+        "y": -38.8571434
       },
-      "links": [],
-      "choices": []
+      "nextNodeId": 0,
+      "transitionConditions": [],
+      "choiceList": [],
+      "linkList": []
     },
     {
       "nodeId": 4,
@@ -83,11 +88,59 @@
       "dialogText": "我是B后选项",
       "isOptionNode": false,
       "layout": {
-        "x": 910.8572,
-        "y": 459.428558
+        "x": 488.000031,
+        "y": 78.28572
       },
-      "links": [],
-      "choices": []
+      "nextNodeId": 0,
+      "transitionConditions": [],
+      "choiceList": [],
+      "linkList": []
+    },
+    {
+      "nodeId": 5,
+      "assetName": "New Dialog Node 9",
+      "speakType": "Node",
+      "speakerName": "",
+      "dialogText": "",
+      "isOptionNode": false,
+      "layout": {
+        "x": 240.0,
+        "y": -117.142853
+      },
+      "nextNodeId": 3,
+      "transitionConditions": [],
+      "choiceList": [],
+      "linkList": []
+    }
+  ],
+  "parameters": [
+    {
+      "name": "New Float",
+      "parameterType": "Float",
+      "defaultFloat": 0.0,
+      "defaultInt": 0,
+      "defaultBool": false
+    },
+    {
+      "name": "New Float 1",
+      "parameterType": "Float",
+      "defaultFloat": 0.0,
+      "defaultInt": 0,
+      "defaultBool": false
+    },
+    {
+      "name": "New Float 2",
+      "parameterType": "Float",
+      "defaultFloat": 0.0,
+      "defaultInt": 0,
+      "defaultBool": false
+    },
+    {
+      "name": "New Bool",
+      "parameterType": "Bool",
+      "defaultFloat": 0.0,
+      "defaultInt": 0,
+      "defaultBool": false
     }
   ]
 }

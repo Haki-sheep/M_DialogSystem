@@ -69,21 +69,11 @@ namespace Miemie.DialogSystem.Editor
             }
             else
             {
-                if (node.LinkList == null || node.LinkList.Count == 0)
+                var next = node.NextTransition?.toNode;
+                if (next == null)
                     sb.AppendLine($"[提示] 节点 [{node.NodeId}] 无出口（可能是结局）");
-                else
-                    ValidateLinks(node, inGraph, sb);
-            }
-        }
-
-        static void ValidateLinks(DialogueNode node, HashSet<DialogueNode> inGraph, StringBuilder sb)
-        {
-            foreach (var link in node.LinkList)
-            {
-                if (link?.toNode == null)
-                    sb.AppendLine($"[错误] [{node.NodeId}] 存在空 toNode 的连线");
-                else if (!inGraph.Contains(link.toNode))
-                    sb.AppendLine($"[警告] [{node.NodeId}] → {link.toNode.name} 不在本图 nodeList");
+                else if (!inGraph.Contains(next))
+                    sb.AppendLine($"[警告] [{node.NodeId}] → {next.name} 不在本图 nodeList");
             }
         }
 

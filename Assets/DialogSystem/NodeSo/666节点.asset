@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 577abdba421cfc443accb8cce6ccf192, type: 3}
+  m_Name: "666\u8282\u70B9"
+  m_EditorClassIdentifier: 
+  nodeId: 0
+  speakType: 0
+  speakerName: 
+  dialogText: 
+  isOptionNode: 1
+  nextTransition:
+    toNode: {fileID: 11400000, guid: 0030b1a035ccf3c4eb7b2986f971e8be, type: 2}
+    conditions: []
+  linkList:
+  - toNode: {fileID: 11400000, guid: 0030b1a035ccf3c4eb7b2986f971e8be, type: 2}
+    condition:
+      e_Condition: 0
+      key: 
+      targetBool: 0
+      targetFloat: 0
+      targetInt: 0
+    conditions: []
+  choiceList:
+  - labelText: 
+    toNode: {fileID: 0}
+    condition:
+      e_Condition: 0
+      key: 
+      targetBool: 0
+      targetFloat: 0
+      targetInt: 0
+    conditions: []
+  - labelText: "\u9009\u98792"
+    toNode: {fileID: 0}
+    condition:
+      e_Condition: 0
+      key: 
+      targetBool: 0
+      targetFloat: 0
+      targetInt: 0
+    conditions: []
+  - labelText: "\u9009\u98793"
+    toNode: {fileID: 0}
+    condition:
+      e_Condition: 0
+      key: 
+      targetBool: 0
+      targetFloat: 0
+      targetInt: 0
+    conditions: []

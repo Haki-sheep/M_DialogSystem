@@ -261,6 +261,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueGraph: {fileID: 11400000, guid: 81d8bbd78bb4c784dacf4900e11c117c, type: 2}
+  variables:
+    boolEntries: []
+    floatEntries: []
+    intEntries: []
+  currentNode: {fileID: 0}
 --- !u!1 &1718463829
 GameObject:
   m_ObjectHideFlags: 0

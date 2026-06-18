@@ -14,18 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphId: 0
   graphName: 
-  startNode: {fileID: 11400000, guid: f69a3dbe35fae724ebb4587fabc1a1d2, type: 2}
+  startNode: {fileID: 11400000, guid: 842567a2da928914db95046849048c2c, type: 2}
   nodeList:
-  - {fileID: 11400000, guid: f69a3dbe35fae724ebb4587fabc1a1d2, type: 2}
-  - {fileID: 11400000, guid: e09b66dc1410044478c832b5038a62ab, type: 2}
-  - {fileID: 11400000, guid: 603f1a912a4ed424c8333b9c15686d17, type: 2}
-  - {fileID: 11400000, guid: 04a4b89ca5404234ead5d912ba0f50ff, type: 2}
-  nodeLayouts:
-  - node: {fileID: 11400000, guid: f69a3dbe35fae724ebb4587fabc1a1d2, type: 2}
-    position: {x: 514.28577, y: 396}
-  - node: {fileID: 11400000, guid: e09b66dc1410044478c832b5038a62ab, type: 2}
-    position: {x: 724.5714, y: 396}
-  - node: {fileID: 11400000, guid: 603f1a912a4ed424c8333b9c15686d17, type: 2}
-    position: {x: 910.28577, y: 339.42856}
-  - node: {fileID: 11400000, guid: 04a4b89ca5404234ead5d912ba0f50ff, type: 2}
-    position: {x: 910.8572, y: 459.42856}
+  - {fileID: 11400000, guid: 842567a2da928914db95046849048c2c, type: 2}
+  - {fileID: 11400000, guid: a1415e40fc5b2e7439f04834ce44f39c, type: 2}
+  - {fileID: 11400000, guid: 67231b5ba10cd3d4c879c8fb548580ed, type: 2}
+  - {fileID: 11400000, guid: 132043c61f731e04da43aac35b89eda1, type: 2}
+  - {fileID: 11400000, guid: f69d056f2b1e3b447afcc0cfdcac1989, type: 2}
+  parameters:
+  - name: New Float
+    parameterType: 0
+    defaultFloat: 0
+    defaultInt: 0
+    defaultBool: 0
+  - name: New Float 1
+    parameterType: 0
+    defaultFloat: 0
+    defaultInt: 0
+    defaultBool: 0
+  - name: New Float 2
+    parameterType: 0
+    defaultFloat: 0
+    defaultInt: 0
+    defaultBool: 0
+  - name: New Bool
+    parameterType: 2
+    defaultFloat: 0
+    defaultInt: 0
+    defaultBool: 0

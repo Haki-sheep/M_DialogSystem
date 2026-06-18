@@ -139,13 +139,31 @@ namespace Miemie.DialogSystem.Editor
                 startNodeId = graph.StartNode != null ? graph.StartNode.NodeId : 0,
             };
 
-            if (graph.NodeList == null)
-                return model;
-
-            foreach (var node in graph.NodeList)
+            if (graph.NodeList != null)
             {
-                if (node != null)
-                    model.nodes.Add(ToNodeModel(graph, node));
+                foreach (var node in graph.NodeList)
+                {
+                    if (node != null)
+                        model.nodes.Add(ToNodeModel(graph, node));
+                }
+            }
+
+            if (graph.Parameters != null)
+            {
+                foreach (var param in graph.Parameters)
+                {
+                    if (param == null)
+                        continue;
+
+                    model.parameters.Add(new DialogueParameterJson
+                    {
+                        name = param.name,
+                        parameterType = param.parameterType.ToString(),
+                        defaultFloat = param.defaultFloat,
+                        defaultInt = param.defaultInt,
+                        defaultBool = param.defaultBool,
+                    });
+                }
             }
 
             return model;
@@ -176,26 +194,34 @@ namespace Miemie.DialogSystem.Editor
                     {
                         labelText = choice.labelText,
                         toNodeId = choice.toNode != null ? choice.toNode.NodeId : 0,
-                        condition = ToConditionModel(choice.condition),
+                        conditions = ToConditionsModel(choice.GetEffectiveConditions()),
                     });
                 }
             }
-            else if (node.LinkList != null)
+            else
             {
-                foreach (var link in node.LinkList)
-                {
-                    if (link == null)
-                        continue;
-
-                    nodeJson.linkList.Add(new DialogueLinkJson
-                    {
-                        toNodeId = link.toNode != null ? link.toNode.NodeId : 0,
-                        condition = ToConditionModel(link.condition),
-                    });
-                }
+                var transition = node.NextTransition;
+                nodeJson.nextNodeId = transition?.toNode != null ? transition.toNode.NodeId : 0;
+                nodeJson.transitionConditions = ToConditionsModel(transition?.GetEffectiveConditions());
             }
 
             return nodeJson;
+        }
+
+        static List<DialogueConditionJson> ToConditionsModel(List<DialogueCondition> conditions)
+        {
+            var result = new List<DialogueConditionJson>();
+            if (conditions == null)
+                return result;
+
+            foreach (var condition in conditions)
+            {
+                if (condition == null || condition.NoneContion)
+                    continue;
+                result.Add(ToConditionModel(condition));
+            }
+
+            return result;
         }
 
         static DialogueConditionJson ToConditionModel(DialogueCondition condition)
@@ -209,6 +235,7 @@ namespace Miemie.DialogSystem.Editor
                 key = condition.key,
                 targetBool = condition.targetBool,
                 targetFloat = condition.targetFloat,
+                targetInt = condition.targetInt,
             };
         }
 
@@ -263,7 +290,7 @@ namespace Miemie.DialogSystem.Editor
                 if (nodeJson.isOptionNode)
                     ApplyChoices(node, nodeJson.choiceList, idMap);
                 else
-                    ApplyLinks(node, nodeJson.linkList, idMap);
+                    ApplyNextTransition(node, nodeJson, idMap);
             }
 
             var graphSo = new SerializedObject(graph);
@@ -271,6 +298,7 @@ namespace Miemie.DialogSystem.Editor
             graphSo.FindProperty("graphName").stringValue = model.graphName ?? string.Empty;
             graphSo.FindProperty("startNode").objectReferenceValue =
                 model.startNodeId != 0 && idMap.TryGetValue(model.startNodeId, out var startNode) ? startNode : null;
+            ApplyParameters(graphSo.FindProperty("parameters"), model.parameters);
             graphSo.ApplyModifiedPropertiesWithoutUndo();
 
             var importedLayouts = new List<(DialogueNode node, Vector2 position)>();
@@ -309,17 +337,36 @@ namespace Miemie.DialogSystem.Editor
             if (!string.IsNullOrEmpty(data.speakType) && System.Enum.TryParse(data.speakType, out SpeakEnums speakType))
                 so.FindProperty("speakType").enumValueIndex = (int)speakType;
 
-            so.FindProperty("linkList").ClearArray();
             so.FindProperty("choiceList").ClearArray();
+            var transitionProp = so.FindProperty("nextTransition");
+            transitionProp.FindPropertyRelative("toNode").objectReferenceValue = null;
+            transitionProp.FindPropertyRelative("conditions").ClearArray();
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        static void ApplyLinks(DialogueNode node, List<DialogueLinkJson> links, Dictionary<int, DialogueNode> idMap)
+        static void ApplyNextTransition(DialogueNode node, DialogueNodeJson data, Dictionary<int, DialogueNode> idMap)
         {
             var so = new SerializedObject(node);
-            var array = so.FindProperty("linkList");
-            array.ClearArray();
-            FillConnectionArray(array, links, idMap, isChoice: false);
+            var transitionProp = so.FindProperty("nextTransition");
+            var toNodeProp = transitionProp.FindPropertyRelative("toNode");
+            var conditionsProp = transitionProp.FindPropertyRelative("conditions");
+
+            int nextId = data.nextNodeId;
+            List<DialogueConditionJson> conditionSource = data.transitionConditions;
+
+            // 兼容旧 JSON linkList
+            if (nextId == 0 && data.linkList != null && data.linkList.Count > 0)
+            {
+                nextId = data.linkList[0].toNodeId;
+                if (data.linkList[0].conditions != null && data.linkList[0].conditions.Count > 0)
+                    conditionSource = data.linkList[0].conditions;
+                else if (data.linkList[0].condition != null)
+                    conditionSource = new List<DialogueConditionJson> { data.linkList[0].condition };
+            }
+
+            toNodeProp.objectReferenceValue = ResolveNode(nextId, idMap);
+            conditionsProp.ClearArray();
+            WriteConditions(conditionsProp, conditionSource, null);
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -350,33 +397,82 @@ namespace Miemie.DialogSystem.Editor
                 {
                     elem.FindPropertyRelative("labelText").stringValue = choice.labelText ?? string.Empty;
                     elem.FindPropertyRelative("toNode").objectReferenceValue = ResolveNode(choice.toNodeId, idMap);
-                    WriteCondition(elem.FindPropertyRelative("condition"), choice.condition);
-                }
-                else if (!isChoice && item is DialogueLinkJson link)
-                {
-                    elem.FindPropertyRelative("toNode").objectReferenceValue = ResolveNode(link.toNodeId, idMap);
-                    WriteCondition(elem.FindPropertyRelative("condition"), link.condition);
+                    WriteConditions(elem.FindPropertyRelative("conditions"), choice.conditions, choice.condition);
                 }
             }
         }
 
-        static DialogueNode ResolveNode(int nodeId, Dictionary<int, DialogueNode> idMap) =>
-            nodeId != 0 && idMap.TryGetValue(nodeId, out var node) ? node : null;
-
-        static void WriteCondition(SerializedProperty conditionProp, DialogueConditionJson conditionJson)
+        static void ApplyParameters(SerializedProperty parametersProp, List<DialogueParameterJson> parameters)
         {
-            if (conditionProp == null)
+            if (parametersProp == null)
                 return;
 
+            parametersProp.ClearArray();
+            if (parameters == null)
+                return;
+
+            foreach (var paramJson in parameters)
+            {
+                if (paramJson == null)
+                    continue;
+
+                parametersProp.InsertArrayElementAtIndex(parametersProp.arraySize);
+                var elem = parametersProp.GetArrayElementAtIndex(parametersProp.arraySize - 1);
+                elem.FindPropertyRelative("name").stringValue = paramJson.name ?? string.Empty;
+
+                if (!string.IsNullOrEmpty(paramJson.parameterType) &&
+                    System.Enum.TryParse(paramJson.parameterType, out E_DialogueParameterType paramType))
+                    elem.FindPropertyRelative("parameterType").enumValueIndex = (int)paramType;
+
+                elem.FindPropertyRelative("defaultFloat").floatValue = paramJson.defaultFloat;
+                elem.FindPropertyRelative("defaultInt").intValue = paramJson.defaultInt;
+                elem.FindPropertyRelative("defaultBool").boolValue = paramJson.defaultBool;
+            }
+        }
+
+        static void WriteConditions(
+            SerializedProperty conditionsProp,
+            List<DialogueConditionJson> conditions,
+            DialogueConditionJson legacyCondition)
+        {
+            if (conditionsProp == null)
+                return;
+
+            conditionsProp.ClearArray();
+
+            if (conditions != null && conditions.Count > 0)
+            {
+                foreach (var conditionJson in conditions)
+                    AppendCondition(conditionsProp, conditionJson);
+                return;
+            }
+
+            if (legacyCondition != null)
+                AppendCondition(conditionsProp, legacyCondition);
+        }
+
+        static void AppendCondition(SerializedProperty conditionsProp, DialogueConditionJson conditionJson)
+        {
+            if (conditionsProp == null || conditionJson == null)
+                return;
+
+            conditionsProp.InsertArrayElementAtIndex(conditionsProp.arraySize);
+            var conditionProp = conditionsProp.GetArrayElementAtIndex(conditionsProp.arraySize - 1);
+
             var conditionType = E_Condition.None;
-            if (conditionJson != null && !string.IsNullOrEmpty(conditionJson.conditionType))
+            if (!string.IsNullOrEmpty(conditionJson.conditionType))
                 System.Enum.TryParse(conditionJson.conditionType, out conditionType);
 
+            conditionType = DialogueCondition.MigrateToAnimatorStyle(conditionType, conditionJson.targetBool);
             conditionProp.FindPropertyRelative("e_Condition").enumValueIndex = (int)conditionType;
-            conditionProp.FindPropertyRelative("key").stringValue = conditionJson?.key ?? string.Empty;
-            conditionProp.FindPropertyRelative("targetBool").boolValue = conditionJson?.targetBool ?? false;
-            conditionProp.FindPropertyRelative("targetFloat").floatValue = conditionJson?.targetFloat ?? 0f;
+            conditionProp.FindPropertyRelative("key").stringValue = conditionJson.key ?? string.Empty;
+            conditionProp.FindPropertyRelative("targetBool").boolValue = conditionJson.targetBool;
+            conditionProp.FindPropertyRelative("targetFloat").floatValue = conditionJson.targetFloat;
+            conditionProp.FindPropertyRelative("targetInt").intValue = conditionJson.targetInt;
         }
+
+        static DialogueNode ResolveNode(int nodeId, Dictionary<int, DialogueNode> idMap) =>
+            nodeId != 0 && idMap.TryGetValue(nodeId, out var node) ? node : null;
     }
 }
 #endif

@@ -19,6 +19,25 @@ namespace Miemie.DialogSystem
         public int startNodeId;
         /// <summary> 对话节点列表 </summary>
         public List<DialogueNodeJson> nodes = new();
+        /// <summary> 公共参数 </summary>
+        public List<DialogueParameterJson> parameters = new();
+    }
+
+    /// <summary>
+    /// 对话参数Json类
+    /// </summary>
+    public class DialogueParameterJson
+    {
+        /// <summary> 参数名 </summary>
+        public string name;
+        /// <summary> 参数类型 </summary>
+        public string parameterType;
+        /// <summary> 默认浮点 </summary>
+        public float defaultFloat;
+        /// <summary> 默认整数 </summary>
+        public int defaultInt;
+        /// <summary> 默认布尔 </summary>
+        public bool defaultBool;
     }
 
     /// <summary>
@@ -40,10 +59,14 @@ namespace Miemie.DialogSystem
         public bool isOptionNode;
         /// <summary> 布局 </summary>
         public LayoutJson layout;
-        /// <summary> 链接列表 </summary>
-        public List<DialogueLinkJson> linkList = new();
+        /// <summary> 普通节点下一跳 </summary>
+        public int nextNodeId;
+        public List<DialogueConditionJson> transitionConditions = new();
         /// <summary> 选项列表 </summary>
         public List<DialogueChoiceJson> choiceList = new();
+
+        /// <summary> 旧版链接 仅导入兼容 </summary>
+        public List<DialogueLinkJson> linkList = new();
     }
 
     /// <summary>
@@ -65,6 +88,7 @@ namespace Miemie.DialogSystem
         /// <summary> 目标节点ID </summary>
         public int toNodeId;
         public DialogueConditionJson condition;
+        public List<DialogueConditionJson> conditions = new();
     }
 
     /// <summary>
@@ -78,6 +102,7 @@ namespace Miemie.DialogSystem
         public int toNodeId;
         /// <summary> 条件 </summary>
         public DialogueConditionJson condition;
+        public List<DialogueConditionJson> conditions = new();
     }
 
     /// <summary>
@@ -93,5 +118,7 @@ namespace Miemie.DialogSystem
         public bool targetBool;
         /// <summary> 目标浮点值 </summary>
         public float targetFloat;
+        /// <summary> 目标整数值 </summary>
+        public int targetInt;
     }
 }

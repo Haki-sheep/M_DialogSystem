@@ -1,0 +1,31 @@
+Editor/
+├── Window/                          主窗口 + partial
+│   ├── DialogueGraphEditorConstants.cs
+│   ├── DialogueGraphEditorWindow.cs          生命周期 字段 入口
+│   ├── DialogueGraphEditorWindow.Layout.cs   UIToolkit 布局 拖拽分隔
+│   ├── DialogueGraphEditorWindow.Toolbar.cs  工具栏
+│   ├── DialogueGraphEditorWindow.MenuTree.cs Odin 树构建 标签刷新
+│   ├── DialogueGraphEditorWindow.Selection.cs 选中同步
+│   └── DialogueGraphEditorWindow.Assets.cs   资产创建 删除 重命名
+├── Panels/
+│   ├── DialogueGraphLeftPanel.cs             左侧树
+│   └── DialogueGraphInspectorPanel.cs        右侧 Inspector
+│   (Parameters 面板在同文件 DialogueGraphParametersPanel)
+├── GraphView/
+│   ├── DialogueNodeView.cs
+│   ├── DialogueGraphView.cs                  网格 平移 选中
+│   ├── DialogueGraphView.Edges.cs            连线 CRUD
+│   └── DialogueGraphView.Nodes.cs            节点 Populate 创建
+├── Inspectors/                      各 Drawer
+└── Utils/                           删除 JSON 校验 布局 样式 等
+
+
+Rumtime/
+├── DialogueConditionTypes.cs   E_Condition 枚举
+├── DialogueCondition.cs        条件判定 + 静态工具
+├── DialogueTransition.cs       单出口跳转
+├── DialogueChoice.cs           选项
+├── DialogueLink.cs             旧数据迁移
+├── DialogueVariables.cs        变量存储
+├── DialogueRunner.cs           推进逻辑
+└── DialogueSpeakEnums.cs

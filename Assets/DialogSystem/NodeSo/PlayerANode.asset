@@ -16,11 +16,27 @@ MonoBehaviour:
   speakType: 1
   speakerName: 
   dialogText: "\u6211\u662F\u73A9\u5BB6"
-  isOptionNode: 0
-  linkList:
-  - toNode: {fileID: 11400000, guid: e09b66dc1410044478c832b5038a62ab, type: 2}
+  isOptionNode: 1
+  nextTransition:
+    toNode: {fileID: 0}
+    conditions: []
+  linkList: []
+  choiceList:
+  - labelText: "\u9009\u98791"
+    toNode: {fileID: 11400000, guid: a1415e40fc5b2e7439f04834ce44f39c, type: 2}
     condition:
       e_Condition: 0
       key: 
       targetBool: 0
-  choiceList: []
+      targetFloat: 0
+      targetInt: 0
+    conditions: []
+  - labelText: "\u9009\u98792"
+    toNode: {fileID: 0}
+    condition:
+      e_Condition: 0
+      key: 
+      targetBool: 0
+      targetFloat: 0
+      targetInt: 0
+    conditions: []

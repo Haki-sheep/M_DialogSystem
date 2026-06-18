@@ -20,6 +20,10 @@ namespace Miemie.DialogSystem
         /// <summary> 节点列表 </summary>
         [SerializeField]
         private List<DialogueNode> nodeList = new();
+        /// <summary> 公共参数 </summary>
+        [HideInInspector]
+        [SerializeField]
+        private List<DialogueParameterDefinition> parameters = new();
         #endregion
 
         #region 属性
@@ -27,13 +31,13 @@ namespace Miemie.DialogSystem
         public string GraphName => graphName;
         public DialogueNode StartNode => startNode;
         public List<DialogueNode> NodeList => nodeList;
+        public List<DialogueParameterDefinition> Parameters => parameters;
         #endregion
 
         #region 方法
         /// <summary>
         /// 添加节点
         /// </summary>
-        /// <param name="node"></param>
         public void AddNode(DialogueNode node)
         {
             if (nodeList is null)
@@ -44,7 +48,6 @@ namespace Miemie.DialogSystem
         /// <summary>
         /// 删除节点
         /// </summary>
-        /// <param name="node"></param>
         public void RemoveNode(DialogueNode node)
         {
             if (nodeList is null)
@@ -55,11 +58,27 @@ namespace Miemie.DialogSystem
             nodeList.Remove(node);
         }
 
+        /// <summary>
+        /// 查找参数定义
+        /// </summary>
+        public DialogueParameterDefinition FindParameter(string paramName)
+        {
+            if (string.IsNullOrEmpty(paramName) || parameters == null)
+                return null;
+
+            foreach (var param in parameters)
+            {
+                if (param != null && param.name == paramName)
+                    return param;
+            }
+
+            return null;
+        }
+
 #if UNITY_EDITOR
         /// <summary>
         /// 设置开始节点
         /// </summary>
-        /// <param name="node"></param>
         public void SetStartNodeInEditorWindow(DialogueNode node)
         {
             startNode = node;

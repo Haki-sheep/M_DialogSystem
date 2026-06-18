@@ -17,5 +17,8 @@ MonoBehaviour:
   speakerName: 
   dialogText: "\u6211\u662FB\u540E\u9009\u9879"
   isOptionNode: 0
+  nextTransition:
+    toNode: {fileID: 0}
+    conditions: []
   linkList: []
   choiceList: []
