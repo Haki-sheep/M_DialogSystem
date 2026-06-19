@@ -130,8 +130,6 @@ namespace Miemie.DialogSystem.Editor
 
         static GraphLayoutEntry GetGraphEntry(DialogueGraph graph, bool create)
         {
-            TryMigrateLegacyLayouts(graph);
-
             var db = GetDatabase();
             foreach (var entry in db.graphs)
             {
@@ -146,58 +144,6 @@ namespace Miemie.DialogSystem.Editor
             db.graphs.Add(created);
             SaveDatabase();
             return created;
-        }
-
-        // 从旧版 DialogueGraph.nodeLayouts 迁移一次
-        static void TryMigrateLegacyLayouts(DialogueGraph graph)
-        {
-            var so = new SerializedObject(graph);
-            var prop = so.FindProperty("nodeLayouts");
-            if (prop == null || !prop.isArray || prop.arraySize == 0)
-                return;
-
-            var db = GetDatabase();
-            GraphLayoutEntry entry = null;
-            foreach (var item in db.graphs)
-            {
-                if (item.graph != graph)
-                    continue;
-
-                entry = item;
-                break;
-            }
-
-            entry ??= new GraphLayoutEntry { graph = graph };
-            if (!db.graphs.Contains(entry))
-                db.graphs.Add(entry);
-
-            for (int i = 0; i < prop.arraySize; i++)
-            {
-                var elem = prop.GetArrayElementAtIndex(i);
-                var node = elem.FindPropertyRelative("node").objectReferenceValue as DialogueNode;
-                if (node == null)
-                    continue;
-
-                var position = elem.FindPropertyRelative("position").vector2Value;
-                bool exists = false;
-                foreach (var layout in entry.layouts)
-                {
-                    if (layout.node != node)
-                        continue;
-
-                    layout.position = position;
-                    exists = true;
-                    break;
-                }
-
-                if (!exists)
-                    entry.layouts.Add(new NodeLayoutEntry { node = node, position = position });
-            }
-
-            prop.ClearArray();
-            so.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(graph);
-            SaveDatabase();
         }
 
         static DialogueGraphLayoutDatabase GetDatabase()

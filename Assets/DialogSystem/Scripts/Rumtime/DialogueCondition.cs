@@ -127,35 +127,5 @@ namespace Miemie.DialogSystem
                 E_Condition.None => "无",
                 _ => condition.ToString(),
             };
-
-        /// <summary>
-        /// 将旧条件迁移为 Animator 风格
-        /// </summary>
-        public static E_Condition MigrateToAnimatorStyle(E_Condition condition, bool legacyTargetBool) =>
-            condition switch
-            {
-                E_Condition.BoolEquals => legacyTargetBool ? E_Condition.BoolTrue : E_Condition.BoolFalse,
-                E_Condition.FloatEquals => E_Condition.FloatGreater,
-                E_Condition.FloatNotEquals => E_Condition.FloatLess,
-                E_Condition.FloatGreaterOrEqual => E_Condition.FloatGreater,
-                E_Condition.FloatLessOrEqual => E_Condition.FloatLess,
-                E_Condition.IntGreaterOrEqual => E_Condition.IntGreater,
-                E_Condition.IntLessOrEqual => E_Condition.IntLess,
-                _ when IsAnimatorStyle(condition) => condition,
-                _ => GetConditionOptions(E_DialogueParameterType.Float)[0],
-            };
-
-        public static bool IsAnimatorStyle(E_Condition condition) =>
-            condition is E_Condition.None
-                or E_Condition.BoolTrue
-                or E_Condition.BoolFalse
-                or E_Condition.FloatGreater
-                or E_Condition.FloatLess
-                or E_Condition.IntGreater
-                or E_Condition.IntLess
-                or E_Condition.IntEquals
-                or E_Condition.IntNotEquals
-                or E_Condition.Trigger
-                or E_Condition.TriggerNotSet;
     }
 }

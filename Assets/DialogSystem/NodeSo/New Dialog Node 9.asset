@@ -20,5 +20,4 @@ MonoBehaviour:
   nextTransition:
     toNode: {fileID: 11400000, guid: 67231b5ba10cd3d4c879c8fb548580ed, type: 2}
     conditions: []
-  linkList: []
   choiceList: []

@@ -202,7 +202,7 @@ namespace Miemie.DialogSystem.Editor
             {
                 var transition = node.NextTransition;
                 nodeJson.nextNodeId = transition?.toNode != null ? transition.toNode.NodeId : 0;
-                nodeJson.transitionConditions = ToConditionsModel(transition?.GetEffectiveConditions());
+                nodeJson.transitionConditionList = ToConditionsModel(transition?.GetEffectiveConditions());
             }
 
             return nodeJson;
@@ -355,21 +355,9 @@ namespace Miemie.DialogSystem.Editor
             var conditionsProp = transitionProp.FindPropertyRelative("conditions");
 
             int nextId = data.nextNodeId;
-            List<DialogueConditionJson> conditionSource = data.transitionConditions;
-
-            // 兼容旧 JSON linkList
-            if (nextId == 0 && data.linkList != null && data.linkList.Count > 0)
-            {
-                nextId = data.linkList[0].toNodeId;
-                if (data.linkList[0].conditions != null && data.linkList[0].conditions.Count > 0)
-                    conditionSource = data.linkList[0].conditions;
-                else if (data.linkList[0].condition != null)
-                    conditionSource = new List<DialogueConditionJson> { data.linkList[0].condition };
-            }
-
             toNodeProp.objectReferenceValue = ResolveNode(nextId, idMap);
             conditionsProp.ClearArray();
-            WriteConditions(conditionsProp, conditionSource, null);
+            WriteConditions(conditionsProp, data.transitionConditionList);
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -400,7 +388,7 @@ namespace Miemie.DialogSystem.Editor
                 {
                     elem.FindPropertyRelative("labelText").stringValue = choice.labelText ?? string.Empty;
                     elem.FindPropertyRelative("toNode").objectReferenceValue = ResolveNode(choice.toNodeId, idMap);
-                    WriteConditions(elem.FindPropertyRelative("conditions"), choice.conditions, choice.condition);
+                    WriteConditions(elem.FindPropertyRelative("conditions"), choice.conditions);
                 }
             }
         }
@@ -433,25 +421,17 @@ namespace Miemie.DialogSystem.Editor
             }
         }
 
-        static void WriteConditions(
-            SerializedProperty conditionsProp,
-            List<DialogueConditionJson> conditions,
-            DialogueConditionJson legacyCondition)
+        static void WriteConditions(SerializedProperty conditionsProp, List<DialogueConditionJson> conditions)
         {
             if (conditionsProp == null)
                 return;
 
             conditionsProp.ClearArray();
-
-            if (conditions != null && conditions.Count > 0)
-            {
-                foreach (var conditionJson in conditions)
-                    AppendCondition(conditionsProp, conditionJson);
+            if (conditions == null)
                 return;
-            }
 
-            if (legacyCondition != null)
-                AppendCondition(conditionsProp, legacyCondition);
+            foreach (var conditionJson in conditions)
+                AppendCondition(conditionsProp, conditionJson);
         }
 
         static void AppendCondition(SerializedProperty conditionsProp, DialogueConditionJson conditionJson)
@@ -466,7 +446,6 @@ namespace Miemie.DialogSystem.Editor
             if (!string.IsNullOrEmpty(conditionJson.conditionType))
                 System.Enum.TryParse(conditionJson.conditionType, out conditionType);
 
-            conditionType = DialogueCondition.MigrateToAnimatorStyle(conditionType, conditionJson.targetBool);
             conditionProp.FindPropertyRelative("e_Condition").enumValueIndex = (int)conditionType;
             conditionProp.FindPropertyRelative("key").stringValue = conditionJson.key ?? string.Empty;
             conditionProp.FindPropertyRelative("targetBool").boolValue = conditionJson.targetBool;

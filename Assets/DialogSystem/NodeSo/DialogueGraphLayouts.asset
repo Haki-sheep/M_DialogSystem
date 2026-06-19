@@ -14,4 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp-Editor:Miemie.DialogSystem.Editor:DialogueGraphLayoutDatabase
   graphs:
   - graph: {fileID: 11400000, guid: cd88d187e7a48214182d2970038cb14a, type: 2}
-    layouts: []
+    layouts:
+    - node: {fileID: 11400000, guid: f69d056f2b1e3b447afcc0cfdcac1989, type: 2}
+      position: {x: 234.2857, y: -125.71428}
+    - node: {fileID: 11400000, guid: 67231b5ba10cd3d4c879c8fb548580ed, type: 2}
+      position: {x: 482.2857, y: 3.4285698}
+    - node: {fileID: 11400000, guid: 132043c61f731e04da43aac35b89eda1, type: 2}
+      position: {x: 598.8572, y: 167.42857}
+    - node: {fileID: 11400000, guid: a1415e40fc5b2e7439f04834ce44f39c, type: 2}
+      position: {x: 258.85718, y: 81.71428}

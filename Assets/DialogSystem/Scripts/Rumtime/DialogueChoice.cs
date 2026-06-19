@@ -14,9 +14,6 @@ namespace Miemie.DialogSystem
         public DialogueNode toNode;
 
         [SerializeField]
-        DialogueCondition condition = new();
-
-        [SerializeField]
         List<DialogueCondition> conditions = new();
 
         public List<DialogueCondition> Conditions => conditions;
@@ -26,7 +23,7 @@ namespace Miemie.DialogSystem
         /// </summary>
         public List<DialogueCondition> GetEffectiveConditions()
         {
-            EnsureConditionsMigrated();
+            EnsureConditionsList();
             return conditions;
         }
 
@@ -35,7 +32,7 @@ namespace Miemie.DialogSystem
         /// </summary>
         public bool CanPass(DialogueVariables vars)
         {
-            EnsureConditionsMigrated();
+            EnsureConditionsList();
 
             if (conditions == null || conditions.Count == 0)
                 return true;
@@ -56,7 +53,7 @@ namespace Miemie.DialogSystem
         /// </summary>
         public void CollectTriggerKeys(List<string> result)
         {
-            EnsureConditionsMigrated();
+            EnsureConditionsList();
             if (conditions == null || result == null)
                 return;
 
@@ -67,16 +64,10 @@ namespace Miemie.DialogSystem
             }
         }
 
-        void EnsureConditionsMigrated()
+        void EnsureConditionsList()
         {
             if (conditions == null)
                 conditions = new List<DialogueCondition>();
-
-            if (conditions.Count > 0)
-                return;
-
-            if (condition != null && !condition.NoneContion)
-                conditions.Add(condition);
         }
     }
 }

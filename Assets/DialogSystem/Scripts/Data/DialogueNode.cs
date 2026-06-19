@@ -25,10 +25,6 @@ namespace Miemie.DialogSystem
         [HideInInspector][SerializeField]
         private DialogueTransition nextTransition = new();
 
-        /// <summary> 旧版连线列表 仅迁移用 </summary>
-        [HideInInspector][SerializeField]
-        private List<DialogueLink> linkList = new();
-
         /// <summary> 选项出口 </summary>
         [HideInInspector][SerializeField]
         private List<DialogueChoice> choiceList = new();
@@ -44,7 +40,8 @@ namespace Miemie.DialogSystem
         {
             get
             {
-                EnsureNextTransitionMigrated();
+                if (nextTransition == null)
+                    nextTransition = new DialogueTransition();
                 return nextTransition;
             }
         }
@@ -73,7 +70,6 @@ namespace Miemie.DialogSystem
         /// </summary>
         public void SetNextNode(DialogueNode node)
         {
-            EnsureNextTransitionMigrated();
             if (nextTransition == null)
                 nextTransition = new DialogueTransition();
             nextTransition.toNode = node;
@@ -144,26 +140,6 @@ namespace Miemie.DialogSystem
         public void PlayNode()
         {
             Debug.Log($"[{nodeId}] {speakerName}: {dialogText}");
-        }
-
-        void EnsureNextTransitionMigrated()
-        {
-            if (nextTransition == null)
-                nextTransition = new DialogueTransition();
-
-            if (nextTransition.toNode != null || linkList == null || linkList.Count == 0)
-                return;
-
-            var legacy = linkList[0];
-            if (legacy == null)
-                return;
-
-            nextTransition.toNode = legacy.toNode;
-            foreach (var condition in legacy.GetEffectiveConditions())
-            {
-                if (condition != null && !condition.NoneContion)
-                    nextTransition.Conditions.Add(condition);
-            }
         }
         #endregion
     }

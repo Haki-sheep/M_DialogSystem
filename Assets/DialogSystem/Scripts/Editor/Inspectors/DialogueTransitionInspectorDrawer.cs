@@ -57,7 +57,6 @@ namespace Miemie.DialogSystem.Editor
             }
 
             var choiceProp = choiceListProp.GetArrayElementAtIndex(choiceIndex);
-            EnsureSerializedConditions(choiceProp);
             var labelProp = choiceProp.FindPropertyRelative("labelText");
             labelProp.stringValue = EditorGUILayout.TextField("选项文本", labelProp.stringValue);
             EditorGUILayout.Space(4);
@@ -115,11 +114,6 @@ namespace Miemie.DialogSystem.Editor
             {
                 var options = DialogueCondition.GetConditionOptions(paramDef.parameterType);
                 var currentType = (E_Condition)typeProp.enumValueIndex;
-                if (!DialogueCondition.IsAnimatorStyle(currentType))
-                {
-                    currentType = DialogueCondition.MigrateToAnimatorStyle(currentType, boolProp.boolValue);
-                    typeProp.enumValueIndex = (int)currentType;
-                }
 
                 int currentIndex = System.Array.IndexOf(options, currentType);
                 if (currentIndex < 0)
@@ -170,33 +164,6 @@ namespace Miemie.DialogSystem.Editor
             }
 
             return -1;
-        }
-
-        static void EnsureSerializedConditions(SerializedProperty connectionProp)
-        {
-            if (connectionProp == null)
-                return;
-
-            var conditionsProp = connectionProp.FindPropertyRelative("conditions");
-            var legacyProp = connectionProp.FindPropertyRelative("condition");
-            if (conditionsProp == null || legacyProp == null || conditionsProp.arraySize > 0)
-                return;
-
-            var legacyType = (E_Condition)legacyProp.FindPropertyRelative("e_Condition").enumValueIndex;
-            if (legacyType == E_Condition.None)
-                return;
-
-            conditionsProp.InsertArrayElementAtIndex(0);
-            CopyConditionProperties(legacyProp, conditionsProp.GetArrayElementAtIndex(0));
-        }
-
-        static void CopyConditionProperties(SerializedProperty from, SerializedProperty to)
-        {
-            to.FindPropertyRelative("e_Condition").enumValueIndex = from.FindPropertyRelative("e_Condition").enumValueIndex;
-            to.FindPropertyRelative("key").stringValue = from.FindPropertyRelative("key").stringValue;
-            to.FindPropertyRelative("targetBool").boolValue = from.FindPropertyRelative("targetBool").boolValue;
-            to.FindPropertyRelative("targetFloat").floatValue = from.FindPropertyRelative("targetFloat").floatValue;
-            to.FindPropertyRelative("targetInt").intValue = from.FindPropertyRelative("targetInt").intValue;
         }
     }
 }

@@ -68,23 +68,10 @@ namespace Miemie.DialogSystem
         public Vector2 layout;
         /// <summary> 普通节点下一跳 </summary>
         public int nextNodeId;
-        public List<DialogueConditionJson> transitionConditions = new();
+        /// <summary> 普通节点下一跳条件 </summary>
+        public List<DialogueConditionJson> transitionConditionList = new();
         /// <summary> 选项列表 </summary>
         public List<DialogueChoiceJson> choiceList = new();
-
-        /// <summary> 旧版链接 仅导入兼容 </summary>
-        public List<DialogueLinkJson> linkList = new();
-    }
-
-    /// <summary>
-    /// 对话链接Json类
-    /// </summary>
-    public class DialogueLinkJson
-    {
-        /// <summary> 目标节点ID </summary>
-        public int toNodeId;
-        public DialogueConditionJson condition;
-        public List<DialogueConditionJson> conditions = new();
     }
 
     /// <summary>
@@ -96,8 +83,6 @@ namespace Miemie.DialogSystem
         public string labelText;
         /// <summary> 目标节点ID </summary>
         public int toNodeId;
-        /// <summary> 条件 </summary>
-        public DialogueConditionJson condition;
         public List<DialogueConditionJson> conditions = new();
     }
 
