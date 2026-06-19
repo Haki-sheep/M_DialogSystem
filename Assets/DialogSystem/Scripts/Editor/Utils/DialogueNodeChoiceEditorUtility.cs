@@ -14,7 +14,7 @@ namespace Miemie.DialogSystem.Editor
                 return;
 
             int nextIndex = (node.ChoiceList?.Count ?? 0) + 1;
-            node.AddChoice(new DialogueChoice { labelText = $"选项{nextIndex}" });
+            node.AddChoiceNode(new DialogueOptionTransition { labelText = $"选项{nextIndex}" });
             EditorUtility.SetDirty(node);
         }
 

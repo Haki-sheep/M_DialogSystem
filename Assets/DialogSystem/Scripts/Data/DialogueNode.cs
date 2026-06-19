@@ -31,12 +31,14 @@ namespace Miemie.DialogSystem
         private bool isOptionNode;
 
         /// <summary> 普通节点下一跳 </summary>
-        [HideInInspector][SerializeField]
+        [HideInInspector]
+        [SerializeField]
         private DialogueTransition nextTransition = new();
 
         /// <summary> 选项出口 </summary>
-        [HideInInspector][SerializeField]
-        private List<DialogueChoice> choiceList = new();
+        [HideInInspector]
+        [SerializeField]
+        private List<DialogueOptionTransition> choiceList = new();
 
         #endregion
 
@@ -55,7 +57,7 @@ namespace Miemie.DialogSystem
                 return nextTransition;
             }
         }
-        public List<DialogueChoice> ChoiceList => choiceList;
+        public List<DialogueOptionTransition> ChoiceList => choiceList;
         #endregion
 
         #region 方法
@@ -64,12 +66,15 @@ namespace Miemie.DialogSystem
         /// </summary>
         public void VaildNode()
         {
+            // 如果节点是选项节点 则检查选项列表是否为空
             if (isOptionNode)
             {
                 if (choiceList is null || choiceList.Count == 0)
                     Debug.LogError("ChoiceList is null or empty");
             }
-            else if (NextTransition?.toNode == null)
+
+            // 如果节点是普通节点 则检查下一节点是否为空
+            if (NextTransition?.toNode == null)
             {
                 Debug.LogWarning("Node is Over");
             }
@@ -82,6 +87,7 @@ namespace Miemie.DialogSystem
         {
             if (nextTransition == null)
                 nextTransition = new DialogueTransition();
+
             nextTransition.toNode = node;
         }
 
@@ -95,19 +101,19 @@ namespace Miemie.DialogSystem
         }
 
         /// <summary>
-        /// 添加选项
+        /// 添加选项节点
         /// </summary>
-        public void AddChoice(DialogueChoice choice)
+        public void AddChoiceNode(DialogueOptionTransition choice)
         {
             if (choiceList is null)
-                choiceList = new List<DialogueChoice>();
+                choiceList = new List<DialogueOptionTransition>();
             choiceList.Add(choice);
         }
 
         /// <summary>
         /// 移除选项
         /// </summary>
-        public void RemoveChoice(DialogueChoice choice)
+        public void RemoveChoiceNode(DialogueOptionTransition choice)
         {
             if (choiceList is not null)
                 choiceList.Remove(choice);
@@ -128,7 +134,7 @@ namespace Miemie.DialogSystem
         /// <summary>
         /// 获取选项
         /// </summary>
-        public DialogueChoice GetChoice(int index)
+        public DialogueOptionTransition GetChoice(int index)
         {
             if (choiceList is not null && index >= 0 && index < choiceList.Count)
                 return choiceList[index];

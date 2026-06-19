@@ -10,7 +10,7 @@ namespace Miemie.DialogSystem
         [SerializeField] private DialogueVariables variables;
         [SerializeField, ReadOnly] private DialogueNode currentNode;
 
-        readonly List<DialogueChoice> availableChoices = new();
+        readonly List<DialogueOptionTransition> availableChoiceList = new();
 
         public DialogueNode CurrentNode => currentNode;
 
@@ -29,7 +29,7 @@ namespace Miemie.DialogSystem
             if (!currentNode.IsOptionNode) return;
 
             RefreshAvailableChoices();
-            for (int i = 0; i < availableChoices.Count && i < 9; i++)
+            for (int i = 0; i < availableChoiceList.Count && i < 9; i++)
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1 + i))
                     SelectOption(i);
@@ -121,9 +121,9 @@ namespace Miemie.DialogSystem
         public void SelectOption(int index)
         {
             RefreshAvailableChoices();
-            if (index < 0 || index >= availableChoices.Count) return;
+            if (index < 0 || index >= availableChoiceList.Count) return;
 
-            var choice = availableChoices[index];
+            var choice = availableChoiceList[index];
             GoTo(choice.toNode);
         }
 
@@ -132,14 +132,14 @@ namespace Miemie.DialogSystem
         /// </summary>
         public void RefreshAvailableChoices()
         {
-            availableChoices.Clear();
+            availableChoiceList.Clear();
             if (currentNode?.ChoiceList == null) return;
 
             foreach (var c in currentNode.ChoiceList)
             {
                 if (c == null || c.toNode == null) continue;
                 if (c.CanPass(variables))
-                    availableChoices.Add(c);
+                    availableChoiceList.Add(c);
             }
         }
 
@@ -149,14 +149,14 @@ namespace Miemie.DialogSystem
         public void LogOptions()
         {
             RefreshAvailableChoices();
-            if (availableChoices.Count == 0)
+            if (availableChoiceList.Count == 0)
             {
                 Debug.Log("没有可用选项");
                 return;
             }
 
-            for (int i = 0; i < availableChoices.Count; i++)
-                Debug.Log($"  [{i + 1}] {availableChoices[i].labelText}");
+            for (int i = 0; i < availableChoiceList.Count; i++)
+                Debug.Log($"  [{i + 1}] {availableChoiceList[i].labelText}");
         }
     }
 }

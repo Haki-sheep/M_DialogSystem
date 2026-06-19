@@ -190,11 +190,11 @@ namespace Miemie.DialogSystem.Editor
                     if (choice == null)
                         continue;
 
-                    nodeJson.choiceList.Add(new DialogueChoiceJson
+                    nodeJson.choiceList.Add(new DialogueOptionTransitionJson
                     {
                         labelText = choice.labelText,
                         toNodeId = choice.toNode != null ? choice.toNode.NodeId : 0,
-                        conditionList = ToConditionsModel(choice.GetEffectiveConditions()),
+                        conditionList = ToConditionsModel(choice.ConditionList),
                     });
                 }
             }
@@ -343,7 +343,7 @@ namespace Miemie.DialogSystem.Editor
             so.FindProperty("choiceList").ClearArray();
             var transitionProp = so.FindProperty("nextTransition");
             transitionProp.FindPropertyRelative("toNode").objectReferenceValue = null;
-            transitionProp.FindPropertyRelative("conditions").ClearArray();
+            transitionProp.FindPropertyRelative("conditionList").ClearArray();
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -352,7 +352,7 @@ namespace Miemie.DialogSystem.Editor
             var so = new SerializedObject(node);
             var transitionProp = so.FindProperty("nextTransition");
             var toNodeProp = transitionProp.FindPropertyRelative("toNode");
-            var conditionsProp = transitionProp.FindPropertyRelative("conditions");
+            var conditionsProp = transitionProp.FindPropertyRelative("conditionList");
 
             int nextId = data.nextNodeId;
             toNodeProp.objectReferenceValue = ResolveNode(nextId, idMap);
@@ -361,7 +361,7 @@ namespace Miemie.DialogSystem.Editor
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        static void ApplyChoices(DialogueNode node, List<DialogueChoiceJson> choices, Dictionary<int, DialogueNode> idMap)
+        static void ApplyChoices(DialogueNode node, List<DialogueOptionTransitionJson> choices, Dictionary<int, DialogueNode> idMap)
         {
             var so = new SerializedObject(node);
             var array = so.FindProperty("choiceList");
@@ -384,11 +384,11 @@ namespace Miemie.DialogSystem.Editor
                 array.InsertArrayElementAtIndex(array.arraySize);
                 var elem = array.GetArrayElementAtIndex(array.arraySize - 1);
 
-                if (isChoice && item is DialogueChoiceJson choice)
+                if (isChoice && item is DialogueOptionTransitionJson option)
                 {
-                    elem.FindPropertyRelative("labelText").stringValue = choice.labelText ?? string.Empty;
-                    elem.FindPropertyRelative("toNode").objectReferenceValue = ResolveNode(choice.toNodeId, idMap);
-                    WriteConditions(elem.FindPropertyRelative("conditions"), choice.conditionList);
+                    elem.FindPropertyRelative("labelText").stringValue = option.labelText ?? string.Empty;
+                    elem.FindPropertyRelative("toNode").objectReferenceValue = ResolveNode(option.toNodeId, idMap);
+                    WriteConditions(elem.FindPropertyRelative("conditionList"), option.conditionList);
                 }
             }
         }

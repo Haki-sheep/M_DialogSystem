@@ -11,9 +11,9 @@ namespace Miemie.DialogSystem.Editor
         public DialogueGraph graph;
         public DialogueNode sourceNode;
         public DialogueNode targetNode;
-        public DialogueChoice choice;
+        public DialogueOptionTransition optionTransition;
 
-        public bool IsChoice => choice != null;
+        public bool IsOptionTransition => optionTransition != null;
 
         public string Title
         {
@@ -21,7 +21,7 @@ namespace Miemie.DialogSystem.Editor
             {
                 string from = sourceNode != null ? $"[{sourceNode.NodeId}]" : "?";
                 string to = targetNode != null ? $"[{targetNode.NodeId}]" : "?";
-                return IsChoice ? $"{from} 选项 → {to}" : $"{from} → {to}";
+                return IsOptionTransition ? $"{from} 选项 → {to}" : $"{from} → {to}";
             }
         }
     }

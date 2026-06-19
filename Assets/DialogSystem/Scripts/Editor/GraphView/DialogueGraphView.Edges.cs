@@ -83,13 +83,13 @@ namespace Miemie.DialogSystem.Editor
 
             var sourceNode = sourceView.Node;
 
-            if (sourceNode.IsOptionNode && edge.userData is DialogueChoice choice)
+            if (sourceNode.IsOptionNode && edge.userData is DialogueOptionTransition optionTransition)
             {
                 foreach (var item in sourceNode.ChoiceList)
                 {
-                    if (!ReferenceEquals(item, choice))
+                    if (!ReferenceEquals(item, optionTransition))
                         continue;
-                    choice.toNode = null;
+                    optionTransition.toNode = null;
                     break;
                 }
                 sourceView.SyncChoicePorts();
@@ -175,7 +175,7 @@ namespace Miemie.DialogSystem.Editor
 
             while (node.ChoiceList.Count < count)
             {
-                node.AddChoice(new DialogueChoice
+                node.AddChoiceNode(new DialogueOptionTransition
                 {
                     labelText = $"选项{node.ChoiceList.Count + 1}",
                 });

@@ -17,16 +17,26 @@ namespace Miemie.DialogSystem.Editor
                 return;
             }
 
-            EditorGUILayout.LabelField("Transition", EditorStyles.boldLabel);
-            EditorGUILayout.LabelField(handle.Title, EditorStyles.miniLabel);
-            EditorGUILayout.HelpBox("条件挂在这条连线上 运行时按 Parameters 判断是否通过", MessageType.None);
+            if (handle.IsOptionTransition)
+            {
+                EditorGUILayout.LabelField("Option Transition", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField(handle.Title, EditorStyles.miniLabel);
+                EditorGUILayout.HelpBox("选项节点的出口 选项文本为运行时按钮文案 条件不满足时该按钮不显示", MessageType.None);
+            }
+            else
+            {
+                EditorGUILayout.LabelField("Transition", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField(handle.Title, EditorStyles.miniLabel);
+                EditorGUILayout.HelpBox("普通节点的 Out 出口 按空格前进时检查条件 不满足则无法跳转", MessageType.None);
+            }
+
             EditorGUILayout.Space(4);
 
             var sourceSo = new SerializedObject(handle.sourceNode);
             sourceSo.Update();
 
-            if (handle.IsChoice)
-                DrawChoiceTransition(handle, sourceSo);
+            if (handle.IsOptionTransition)
+                DrawOptionTransition(handle, sourceSo);
             else
                 DrawLinearTransition(handle, sourceSo);
 
@@ -43,24 +53,24 @@ namespace Miemie.DialogSystem.Editor
                 return;
             }
 
-            DrawConditionsBlock(handle.graph, transitionProp.FindPropertyRelative("conditions"), "Conditions");
+            DrawConditionsBlock(handle.graph, transitionProp.FindPropertyRelative("conditionList"), "Conditions");
         }
 
-        static void DrawChoiceTransition(DialogueTransitionHandle handle, SerializedObject sourceSo)
+        static void DrawOptionTransition(DialogueTransitionHandle handle, SerializedObject sourceSo)
         {
             var choiceListProp = sourceSo.FindProperty("choiceList");
-            int choiceIndex = FindChoiceIndex(handle.sourceNode, handle.choice);
+            int choiceIndex = FindOptionTransitionIndex(handle.sourceNode, handle.optionTransition);
             if (choiceIndex < 0)
             {
-                EditorGUILayout.HelpBox("找不到对应选项数据", MessageType.Warning);
+                EditorGUILayout.HelpBox("找不到对应选项跳转数据", MessageType.Warning);
                 return;
             }
 
-            var choiceProp = choiceListProp.GetArrayElementAtIndex(choiceIndex);
-            var labelProp = choiceProp.FindPropertyRelative("labelText");
+            var optionProp = choiceListProp.GetArrayElementAtIndex(choiceIndex);
+            var labelProp = optionProp.FindPropertyRelative("labelText");
             labelProp.stringValue = EditorGUILayout.TextField("选项文本", labelProp.stringValue);
             EditorGUILayout.Space(4);
-            DrawConditionsBlock(handle.graph, choiceProp.FindPropertyRelative("conditions"), "Conditions");
+            DrawConditionsBlock(handle.graph, optionProp.FindPropertyRelative("conditionList"), "Conditions");
         }
 
         static void DrawConditionsBlock(DialogueGraph graph, SerializedProperty conditionsProp, string title)
@@ -152,14 +162,14 @@ namespace Miemie.DialogSystem.Editor
             conditionProp.FindPropertyRelative("e_Condition").enumValueIndex = (int)defaultType;
         }
 
-        static int FindChoiceIndex(DialogueNode node, DialogueChoice choice)
+        static int FindOptionTransitionIndex(DialogueNode node, DialogueOptionTransition optionTransition)
         {
-            if (node?.ChoiceList == null || choice == null)
+            if (node?.ChoiceList == null || optionTransition == null)
                 return -1;
 
             for (int i = 0; i < node.ChoiceList.Count; i++)
             {
-                if (ReferenceEquals(node.ChoiceList[i], choice))
+                if (ReferenceEquals(node.ChoiceList[i], optionTransition))
                     return i;
             }
 
