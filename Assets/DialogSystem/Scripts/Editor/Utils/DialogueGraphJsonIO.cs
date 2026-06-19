@@ -180,7 +180,7 @@ namespace Miemie.DialogSystem.Editor
                 speakerName = node.SpeakerName,
                 dialogText = node.DialogText,
                 isOptionNode = node.IsOptionNode,
-                layout = new LayoutJson { x = layout.x, y = layout.y },
+                layout = layout,
             };
 
             if (node.IsOptionNode && node.ChoiceList != null)
@@ -304,10 +304,13 @@ namespace Miemie.DialogSystem.Editor
             var importedLayouts = new List<(DialogueNode node, Vector2 position)>();
             foreach (var nodeJson in model.nodes)
             {
-                if (nodeJson?.layout == null || !idMap.TryGetValue(nodeJson.nodeId, out var node))
+                if (nodeJson == null || !idMap.TryGetValue(nodeJson.nodeId, out var node))
                     continue;
 
-                importedLayouts.Add((node, new Vector2(nodeJson.layout.x, nodeJson.layout.y)));
+                if (nodeJson.layout == Vector2.zero)
+                    continue;
+
+                importedLayouts.Add((node, nodeJson.layout));
             }
 
             DialogueGraphLayoutStore.ReplaceGraphLayouts(graph, importedLayouts);

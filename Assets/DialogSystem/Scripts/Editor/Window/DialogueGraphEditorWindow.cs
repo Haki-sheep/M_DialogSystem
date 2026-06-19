@@ -206,7 +206,7 @@ namespace Miemie.DialogSystem.Editor
                 return;
 
             menuTree.DrawMenuTree();
-            menuTree.HandleKeybaordMenuNavigation();
+            menuTree.HandleKeyboardMenuNavigation();
         }
 
         internal static bool IsAssetAlive(UnityEngine.Object obj) => obj;

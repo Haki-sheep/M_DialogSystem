@@ -1,9 +1,14 @@
-using System.Collections.Generic;
+  using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Miemie.DialogSystem
 {
+    /// <summary>
+    /// 对话图
+    /// 该图包含自身信息 图参数 连接节点
+    /// 图的运行从startNode开始,因此其一定不能为null
+    /// </summary>
     [CreateAssetMenu(fileName = "New Dialogue Graph", menuName = "Dialog System/Dialogue Graph")]
     public class DialogueGraph : ScriptableObject
     {
@@ -20,9 +25,9 @@ namespace Miemie.DialogSystem
         /// <summary> 节点列表 </summary>
         [SerializeField]
         private List<DialogueNode> nodeList = new();
-        /// <summary> 公共参数 </summary>
-        [HideInInspector]
-        [SerializeField]
+        
+        /// <summary> 图参数 </summary>
+        [SerializeField, HideInInspector]
         private List<DialogueParameterDefinition> parameters = new();
         #endregion
 

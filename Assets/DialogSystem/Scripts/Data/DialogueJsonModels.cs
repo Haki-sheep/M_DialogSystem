@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Miemie.DialogSystem
 {
@@ -9,16 +10,22 @@ namespace Miemie.DialogSystem
     {
         /// <summary> 对话图ID </summary>
         public int graphId;
+
         /// <summary> 对话图名称 </summary>
         public string graphName;
+
         /// <summary> 对话图资产名称 </summary>
         public string assetName;
+
         /// <summary> 对话图资产路径 </summary>
         public string assetPath;
+
         /// <summary> 开始节点ID </summary>
         public int startNodeId;
+
         /// <summary> 对话节点列表 </summary>
         public List<DialogueNodeJson> nodes = new();
+
         /// <summary> 公共参数 </summary>
         public List<DialogueParameterJson> parameters = new();
     }
@@ -57,8 +64,8 @@ namespace Miemie.DialogSystem
         public string dialogText;
         /// <summary> 是否是选项节点 </summary>
         public bool isOptionNode;
-        /// <summary> 布局 </summary>
-        public LayoutJson layout;
+        /// <summary> 布局位置 </summary>
+        public Vector2 layout;
         /// <summary> 普通节点下一跳 </summary>
         public int nextNodeId;
         public List<DialogueConditionJson> transitionConditions = new();
@@ -67,17 +74,6 @@ namespace Miemie.DialogSystem
 
         /// <summary> 旧版链接 仅导入兼容 </summary>
         public List<DialogueLinkJson> linkList = new();
-    }
-
-    /// <summary>
-    /// 布局Json类
-    /// </summary>
-    public class LayoutJson
-    {
-        /// <summary> X坐标 </summary>
-        public float x;
-        /// <summary> Y坐标 </summary>
-        public float y;
     }
 
     /// <summary>
