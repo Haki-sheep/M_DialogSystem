@@ -5,7 +5,7 @@
 // This work is subject to the terms at http://dotween.demigiant.com/license.php
 
 
-#if false // MODULE_MARKER
+#if true // MODULE_MARKER
 using System;
 using System.Globalization;
 using System.Collections.Generic;
