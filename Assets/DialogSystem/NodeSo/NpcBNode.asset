@@ -19,33 +19,14 @@ MonoBehaviour:
   isOptionNode: 1
   nextTransition:
     toNode: {fileID: 0}
-    conditions: []
-  linkList: []
+    conditionList: []
   choiceList:
   - labelText: 
     toNode: {fileID: 11400000, guid: 67231b5ba10cd3d4c879c8fb548580ed, type: 2}
-    condition:
-      e_Condition: 0
-      key: 
-      targetBool: 0
-      targetFloat: 0
-      targetInt: 0
-    conditions: []
+    conditionList: []
   - labelText: 
     toNode: {fileID: 11400000, guid: 132043c61f731e04da43aac35b89eda1, type: 2}
-    condition:
-      e_Condition: 0
-      key: 
-      targetBool: 0
-      targetFloat: 0
-      targetInt: 0
-    conditions: []
+    conditionList: []
   - labelText: "\u9009\u98793"
     toNode: {fileID: 0}
-    condition:
-      e_Condition: 0
-      key: 
-      targetBool: 0
-      targetFloat: 0
-      targetInt: 0
-    conditions: []
+    conditionList: []

@@ -6,7 +6,8 @@ using UnityEngine.Serialization;
 namespace Miemie.DialogSystem
 {
     /// <summary>
-    /// 选项跳转 选项节点上每条出口对应一个实例
+    /// 选项跳转
+    /// 这是对于多选项出口的连接线
     /// </summary>
     [Serializable]
     public class DialogueOptionTransition
@@ -15,7 +16,6 @@ namespace Miemie.DialogSystem
         public DialogueNode toNode;
 
         [SerializeField]
-        [FormerlySerializedAs("conditions")]
         List<DialogueCondition> conditionList = new();
 
         public List<DialogueCondition> ConditionList => conditionList;

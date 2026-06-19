@@ -19,7 +19,7 @@ namespace Miemie.DialogSystem.Editor
             }
 
             var so = new SerializedObject(graph);
-            var parametersProp = so.FindProperty("parameters");
+            var parametersProp = so.FindProperty("parameterList");
 
             scroll = EditorGUILayout.BeginScrollView(scroll, false, true, GUILayout.Width(panelWidth - 16f));
             if (parametersProp != null)
@@ -61,18 +61,18 @@ namespace Miemie.DialogSystem.Editor
             }
             EditorGUILayout.EndHorizontal();
 
-            var newType = (E_DialogueParameterType)EditorGUILayout.EnumPopup("类型", (E_DialogueParameterType)typeProp.enumValueIndex);
+            var newType = (EDialogueParameterType)EditorGUILayout.EnumPopup("类型", (EDialogueParameterType)typeProp.enumValueIndex);
             typeProp.enumValueIndex = (int)newType;
 
             switch (newType)
             {
-                case E_DialogueParameterType.Float:
+                case EDialogueParameterType.Float:
                     floatProp.floatValue = EditorGUILayout.FloatField("默认值", floatProp.floatValue);
                     break;
-                case E_DialogueParameterType.Int:
+                case EDialogueParameterType.Int:
                     intProp.intValue = EditorGUILayout.IntField("默认值", intProp.intValue);
                     break;
-                case E_DialogueParameterType.Bool:
+                case EDialogueParameterType.Bool:
                     boolProp.boolValue = EditorGUILayout.Toggle("默认值", boolProp.boolValue);
                     break;
             }
@@ -83,13 +83,13 @@ namespace Miemie.DialogSystem.Editor
         static void ShowAddParameterMenu(DialogueGraph graph, SerializedProperty parametersProp)
         {
             var menu = new GenericMenu();
-            menu.AddItem(new GUIContent("Float"), false, () => AddParameter(graph, parametersProp, E_DialogueParameterType.Float));
-            menu.AddItem(new GUIContent("Int"), false, () => AddParameter(graph, parametersProp, E_DialogueParameterType.Int));
-            menu.AddItem(new GUIContent("Bool"), false, () => AddParameter(graph, parametersProp, E_DialogueParameterType.Bool));
+            menu.AddItem(new GUIContent("Float"), false, () => AddParameter(graph, parametersProp, EDialogueParameterType.Float));
+            menu.AddItem(new GUIContent("Int"), false, () => AddParameter(graph, parametersProp, EDialogueParameterType.Int));
+            menu.AddItem(new GUIContent("Bool"), false, () => AddParameter(graph, parametersProp, EDialogueParameterType.Bool));
             menu.ShowAsContext();
         }
 
-        static void AddParameter(DialogueGraph graph, SerializedProperty parametersProp, E_DialogueParameterType type)
+        static void AddParameter(DialogueGraph graph, SerializedProperty parametersProp, EDialogueParameterType type)
         {
             if (parametersProp == null)
                 return;
@@ -109,13 +109,13 @@ namespace Miemie.DialogSystem.Editor
             EditorUtility.SetDirty(graph);
         }
 
-        static string GenerateUniqueName(DialogueGraph graph, E_DialogueParameterType type)
+        static string GenerateUniqueName(DialogueGraph graph, EDialogueParameterType type)
         {
             string prefix = type switch
             {
-                E_DialogueParameterType.Float => "New Float",
-                E_DialogueParameterType.Int => "New Int",
-                E_DialogueParameterType.Bool => "New Bool",
+                EDialogueParameterType.Float => "New Float",
+                EDialogueParameterType.Int => "New Int",
+                EDialogueParameterType.Bool => "New Bool",
                 _ => "New Param",
             };
 

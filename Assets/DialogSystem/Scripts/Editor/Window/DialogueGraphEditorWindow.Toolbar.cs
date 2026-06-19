@@ -8,6 +8,8 @@ namespace Miemie.DialogSystem.Editor
     {
         void DrawToolbar()
         {
+            HandleSaveShortcut();
+
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 
             if (GUILayout.Button("新建对话图", EditorStyles.toolbarButton, GUILayout.Width(80)))
@@ -41,7 +43,81 @@ namespace Miemie.DialogSystem.Editor
                 }
             }
 
+            GUILayout.FlexibleSpace();
+            if (HasUnsavedChanges())
+                GUILayout.Label("*", UnsavedMarkStyle, GUILayout.Width(14));
+
             EditorGUILayout.EndHorizontal();
+        }
+
+        static GUIStyle unsavedMarkStyle;
+
+        static GUIStyle UnsavedMarkStyle
+        {
+            get
+            {
+                if (unsavedMarkStyle == null)
+                {
+                    unsavedMarkStyle = new GUIStyle(EditorStyles.boldLabel)
+                    {
+                        fontSize = 16,
+                        alignment = TextAnchor.MiddleCenter,
+                    };
+                    unsavedMarkStyle.normal.textColor = new Color(1f, 0.82f, 0.2f);
+                }
+
+                return unsavedMarkStyle;
+            }
+        }
+
+        void HandleSaveShortcut()
+        {
+            var evt = Event.current;
+            if (evt.type != EventType.KeyDown || !evt.control || evt.keyCode != KeyCode.S)
+                return;
+
+            if (!SaveActiveGraph())
+                return;
+
+            evt.Use();
+            Repaint();
+        }
+
+        /// <summary>
+        /// 当前图或布局是否有未保存修改
+        /// </summary>
+        bool HasUnsavedChanges()
+        {
+            var graph = GetActiveGraph();
+            if (graph == null)
+                return DialogueGraphLayoutStore.IsDatabaseDirty();
+
+            if (EditorUtility.IsDirty(graph))
+                return true;
+
+            if (graph.NodeList != null)
+            {
+                foreach (var node in graph.NodeList)
+                {
+                    if (node != null && EditorUtility.IsDirty(node))
+                        return true;
+                }
+            }
+
+            return DialogueGraphLayoutStore.IsDatabaseDirty();
+        }
+
+        /// <summary>
+        /// 保存当前对话图相关资产
+        /// </summary>
+        bool SaveActiveGraph()
+        {
+            if (!HasUnsavedChanges())
+                return false;
+
+            AssetDatabase.SaveAssets();
+            Repaint();
+            return true;
         }
 
         void CreateNewDialogueGraph()

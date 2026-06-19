@@ -1,17 +1,28 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace Miemie.DialogSystem
 {
-    public class DialogueRunner : MonoBehaviour
+    public class DialogueRunner : SerializedMonoBehaviour
     {
-        [SerializeField] private DialogueGraph dialogueGraph;
-        [SerializeField] private DialogueVariables variables;
-        [SerializeField, ReadOnly] private DialogueNode currentNode;
+        /// <summary> 对话图 </summary>
+        [SerializeField]
+        private DialogueGraph dialogueGraph;
 
-        readonly List<DialogueOptionTransition> availableChoiceList = new();
+        /// <summary> 对话变量列表 </summary>
+        [OdinSerialize]
+        private DialogueVariables variableList = new();
+        
+        /// <summary> 当前节点 </summary>
+        [SerializeField, ReadOnly] 
+        private DialogueNode currentNode;
 
+        /// <summary> 可用选项列表 </summary>
+        private readonly List<DialogueOptionTransition> availableChoiceList = new();
+
+        // 属性
         public DialogueNode CurrentNode => currentNode;
 
         void Start()
@@ -53,7 +64,7 @@ namespace Miemie.DialogSystem
                 return;
             }
 
-            variables?.ApplyDefaults(dialogueGraph.Parameters);
+            variableList?.ApplyDefaults(dialogueGraph.Parameters);
             GoTo(dialogueGraph.StartNode);
         }
 
@@ -106,7 +117,7 @@ namespace Miemie.DialogSystem
                 return;
             }
 
-            if (!transition.CanPass(variables))
+            if (!transition.CanPass(variableList))
             {
                 Debug.Log("连线条件未满足");
                 return;
@@ -138,7 +149,7 @@ namespace Miemie.DialogSystem
             foreach (var c in currentNode.ChoiceList)
             {
                 if (c == null || c.toNode == null) continue;
-                if (c.CanPass(variables))
+                if (c.CanPass(variableList))
                     availableChoiceList.Add(c);
             }
         }

@@ -110,6 +110,9 @@ namespace Miemie.DialogSystem.Editor
         void OnInspectorUpdate()
         {
             UpdateWindowLayout();
+            if (HasUnsavedChanges())
+                Repaint();
+
             if (EditorApplication.timeSinceStartup < nextMenuLabelRefreshTime)
                 return;
 

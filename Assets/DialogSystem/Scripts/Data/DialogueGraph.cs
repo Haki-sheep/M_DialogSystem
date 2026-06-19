@@ -28,7 +28,7 @@ namespace Miemie.DialogSystem
         
         /// <summary> 图参数 </summary>
         [SerializeField, HideInInspector]
-        private List<DialogueParameterDefinition> parameters = new();
+        private List<DialogueParameterDefinition> parameterList = new();
         #endregion
 
         #region 属性
@@ -36,7 +36,7 @@ namespace Miemie.DialogSystem
         public string GraphName => graphName;
         public DialogueNode StartNode => startNode;
         public List<DialogueNode> NodeList => nodeList;
-        public List<DialogueParameterDefinition> Parameters => parameters;
+        public List<DialogueParameterDefinition> Parameters => parameterList;
         #endregion
 
         #region 方法
@@ -68,10 +68,10 @@ namespace Miemie.DialogSystem
         /// </summary>
         public DialogueParameterDefinition FindParameter(string paramName)
         {
-            if (string.IsNullOrEmpty(paramName) || parameters == null)
+            if (string.IsNullOrEmpty(paramName) || parameterList == null)
                 return null;
 
-            foreach (var param in parameters)
+            foreach (var param in parameterList)
             {
                 if (param != null && param.name == paramName)
                     return param;

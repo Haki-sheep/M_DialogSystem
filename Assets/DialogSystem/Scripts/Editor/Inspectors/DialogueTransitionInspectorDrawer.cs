@@ -107,8 +107,7 @@ namespace Miemie.DialogSystem.Editor
         static void DrawConditionRow(DialogueGraph graph, SerializedProperty conditionProp)
         {
             var keyProp = conditionProp.FindPropertyRelative("key");
-            var typeProp = conditionProp.FindPropertyRelative("e_Condition");
-            var boolProp = conditionProp.FindPropertyRelative("targetBool");
+            var typeProp = conditionProp.FindPropertyRelative("eCondition");
             var floatProp = conditionProp.FindPropertyRelative("targetFloat");
             var intProp = conditionProp.FindPropertyRelative("targetInt");
 
@@ -118,29 +117,30 @@ namespace Miemie.DialogSystem.Editor
             var paramDef = graph?.FindParameter(newKey);
             if (paramDef == null)
             {
-                typeProp.enumValueIndex = (int)(E_Condition)EditorGUILayout.EnumPopup("条件", (E_Condition)typeProp.enumValueIndex);
+                var current = (ECondition)typeProp.intValue;
+                typeProp.intValue = (int)(ECondition)EditorGUILayout.EnumPopup("条件", current);
             }
             else
             {
-                var options = DialogueCondition.GetConditionOptions(paramDef.parameterType);
-                var currentType = (E_Condition)typeProp.enumValueIndex;
+                var options = DialogueConditionEditorUtility.GetConditionOptions(paramDef.parameterType);
+                var currentType = (ECondition)typeProp.intValue;
 
                 int currentIndex = System.Array.IndexOf(options, currentType);
                 if (currentIndex < 0)
                 {
-                    typeProp.enumValueIndex = (int)options[0];
+                    typeProp.intValue = (int)options[0];
                     currentIndex = 0;
                 }
 
-                string[] labels = System.Array.ConvertAll(options, DialogueCondition.GetDisplayLabel);
+                string[] labels = System.Array.ConvertAll(options, DialogueConditionEditorUtility.GetDisplayLabel);
                 int picked = EditorGUILayout.Popup("条件", currentIndex, labels);
-                typeProp.enumValueIndex = (int)options[picked];
+                typeProp.intValue = (int)options[picked];
             }
 
-            var conditionType = (E_Condition)typeProp.enumValueIndex;
-            if (DialogueCondition.IsFloatThresholdType(conditionType))
+            var conditionType = (ECondition)typeProp.intValue;
+            if (DialogueConditionEditorUtility.IsFloatThresholdType(conditionType))
                 floatProp.floatValue = EditorGUILayout.FloatField("阈值", floatProp.floatValue);
-            else if (DialogueCondition.IsIntThresholdType(conditionType))
+            else if (DialogueConditionEditorUtility.IsIntThresholdType(conditionType))
                 intProp.intValue = EditorGUILayout.IntField("阈值", intProp.intValue);
         }
 
@@ -157,9 +157,9 @@ namespace Miemie.DialogSystem.Editor
             conditionProp.FindPropertyRelative("key").stringValue = defaultKey;
             var paramDef = graph?.FindParameter(defaultKey);
             var defaultType = paramDef != null
-                ? DialogueCondition.GetConditionOptions(paramDef.parameterType)[0]
-                : E_Condition.None;
-            conditionProp.FindPropertyRelative("e_Condition").enumValueIndex = (int)defaultType;
+                ? DialogueConditionEditorUtility.GetConditionOptions(paramDef.parameterType)[0]
+                : ECondition.None;
+            conditionProp.FindPropertyRelative("eCondition").intValue = (int)defaultType;
         }
 
         static int FindOptionTransitionIndex(DialogueNode node, DialogueOptionTransition optionTransition)

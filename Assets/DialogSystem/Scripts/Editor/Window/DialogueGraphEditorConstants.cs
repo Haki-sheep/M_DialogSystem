@@ -16,6 +16,7 @@ namespace Miemie.DialogSystem.Editor
         public const float SplitterWidth = 5f;
         public const float ToolbarHeight = 22f;
         public const double MenuLabelRefreshInterval = 0.5d;
+        public const int MenuNodeDialogTextMaxLength = 16;
         public const string RenameFieldControl = "dialog-asset-rename-field";
     }
 }

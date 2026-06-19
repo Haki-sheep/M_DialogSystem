@@ -95,8 +95,6 @@ namespace Miemie.DialogSystem
         public string conditionType;
         /// <summary> 条件键 </summary>
         public string key;
-        /// <summary> 目标布尔值 </summary>
-        public bool targetBool;
         /// <summary> 目标浮点值 </summary>
         public float targetFloat;
         /// <summary> 目标整数值 </summary>

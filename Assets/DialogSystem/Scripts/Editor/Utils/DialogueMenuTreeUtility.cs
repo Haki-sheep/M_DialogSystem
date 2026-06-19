@@ -6,7 +6,11 @@ namespace Miemie.DialogSystem.Editor
     /// </summary>
     static class DialogueMenuTreeUtility
     {
-        public static string SanitizeMenuPath(string path) => path.Replace("/", "／");
+        public static string BuildNodeHeader(DialogueNode node) =>
+            $"[{node.NodeId}] {node.name}";
+
+        public static string SanitizeMenuPath(string path) =>
+            path.Replace("/", "／").Replace("\n", " ").Replace("\r", string.Empty);
 
         public static string Truncate(string text, int max)
         {

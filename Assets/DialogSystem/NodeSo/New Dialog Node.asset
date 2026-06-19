@@ -19,6 +19,5 @@ MonoBehaviour:
   isOptionNode: 0
   nextTransition:
     toNode: {fileID: 0}
-    conditions: []
-  linkList: []
+    conditionList: []
   choiceList: []

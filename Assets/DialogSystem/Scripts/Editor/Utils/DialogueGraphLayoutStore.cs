@@ -169,6 +169,18 @@ namespace Miemie.DialogSystem.Editor
 
             EditorUtility.SetDirty(database);
         }
+
+        /// <summary>
+        /// 布局库是否有未保存修改
+        /// </summary>
+        public static bool IsDatabaseDirty()
+        {
+            if (database != null)
+                return EditorUtility.IsDirty(database);
+
+            var db = AssetDatabase.LoadAssetAtPath<DialogueGraphLayoutDatabase>(DatabasePath);
+            return db != null && EditorUtility.IsDirty(db);
+        }
     }
 }
 #endif

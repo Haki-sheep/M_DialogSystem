@@ -227,13 +227,12 @@ namespace Miemie.DialogSystem.Editor
         static DialogueConditionJson ToConditionModel(DialogueCondition condition)
         {
             if (condition == null)
-                return new DialogueConditionJson { conditionType = E_Condition.None.ToString() };
+                return new DialogueConditionJson { conditionType = ECondition.None.ToString() };
 
             return new DialogueConditionJson
             {
-                conditionType = condition.e_Condition.ToString(),
+                conditionType = condition.eCondition.ToString(),
                 key = condition.key,
-                targetBool = condition.targetBool,
                 targetFloat = condition.targetFloat,
                 targetInt = condition.targetInt,
             };
@@ -298,7 +297,7 @@ namespace Miemie.DialogSystem.Editor
             graphSo.FindProperty("graphName").stringValue = model.graphName ?? string.Empty;
             graphSo.FindProperty("startNode").objectReferenceValue =
                 model.startNodeId != 0 && idMap.TryGetValue(model.startNodeId, out var startNode) ? startNode : null;
-            ApplyParameters(graphSo.FindProperty("parameters"), model.parameters);
+            ApplyParameters(graphSo.FindProperty("parameterList"), model.parameters);
             graphSo.ApplyModifiedPropertiesWithoutUndo();
 
             var importedLayouts = new List<(DialogueNode node, Vector2 position)>();
@@ -412,7 +411,7 @@ namespace Miemie.DialogSystem.Editor
                 elem.FindPropertyRelative("name").stringValue = paramJson.name ?? string.Empty;
 
                 if (!string.IsNullOrEmpty(paramJson.parameterType) &&
-                    System.Enum.TryParse(paramJson.parameterType, out E_DialogueParameterType paramType))
+                    System.Enum.TryParse(paramJson.parameterType, out EDialogueParameterType paramType))
                     elem.FindPropertyRelative("parameterType").enumValueIndex = (int)paramType;
 
                 elem.FindPropertyRelative("defaultFloat").floatValue = paramJson.defaultFloat;
@@ -442,13 +441,12 @@ namespace Miemie.DialogSystem.Editor
             conditionsProp.InsertArrayElementAtIndex(conditionsProp.arraySize);
             var conditionProp = conditionsProp.GetArrayElementAtIndex(conditionsProp.arraySize - 1);
 
-            var conditionType = E_Condition.None;
+            var conditionType = ECondition.None;
             if (!string.IsNullOrEmpty(conditionJson.conditionType))
                 System.Enum.TryParse(conditionJson.conditionType, out conditionType);
 
-            conditionProp.FindPropertyRelative("e_Condition").enumValueIndex = (int)conditionType;
+            conditionProp.FindPropertyRelative("eCondition").intValue = (int)conditionType;
             conditionProp.FindPropertyRelative("key").stringValue = conditionJson.key ?? string.Empty;
-            conditionProp.FindPropertyRelative("targetBool").boolValue = conditionJson.targetBool;
             conditionProp.FindPropertyRelative("targetFloat").floatValue = conditionJson.targetFloat;
             conditionProp.FindPropertyRelative("targetInt").intValue = conditionJson.targetInt;
         }

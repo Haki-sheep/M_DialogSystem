@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Miemie.DialogSystem.Editor
 {
@@ -25,6 +26,7 @@ namespace Miemie.DialogSystem.Editor
             this.graph = graph;
 
             title = BuildTitle();
+            ApplyTitleLayout();
             viewDataKey = node.GetInstanceID().ToString();
             capabilities |= Capabilities.Selectable | Capabilities.Movable | Capabilities.Deletable;
 
@@ -43,15 +45,27 @@ namespace Miemie.DialogSystem.Editor
 
         string BuildTitle()
         {
-            string text = Node.DialogText;
-            if (!string.IsNullOrEmpty(text) && text.Length > 16)
-                text = text.Substring(0, 16) + "…";
-            return $"[{Node.NodeId}] {Node.SpeakerName}\n{text}";
+            string header = DialogueMenuTreeUtility.BuildNodeHeader(Node);
+            if (string.IsNullOrEmpty(Node.DialogText))
+                return header;
+
+            string text = DialogueMenuTreeUtility.Truncate(
+                Node.DialogText,
+                DialogueGraphEditorConstants.MenuNodeDialogTextMaxLength);
+            return $"{header}\n{text}";
+        }
+
+        void ApplyTitleLayout()
+        {
+            titleContainer.style.minHeight = 44;
+            titleContainer.style.height = StyleKeyword.Auto;
+            titleContainer.style.whiteSpace = WhiteSpace.Normal;
         }
 
         public void RefreshTitle()
         {
             title = BuildTitle();
+            ApplyTitleLayout();
         }
 
         void AddSingleOutputPort(string portName)

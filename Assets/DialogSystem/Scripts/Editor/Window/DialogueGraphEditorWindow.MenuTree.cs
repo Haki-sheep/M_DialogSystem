@@ -115,9 +115,12 @@ namespace Miemie.DialogSystem.Editor
                         continue;
 
                     nodeToGraph[node] = graph;
-                    string label = BuildNodeLabel(node);
-                    nodeLabelCache[node] = label;
-                    tree.Add($"{basePath}/{DialogueMenuTreeUtility.SanitizeMenuPath(label)}", node);
+                    string displayLabel = DialogueMenuTreeUtility.BuildNodeHeader(node);
+                    string menuPath = BuildNodeMenuPath(basePath, node);
+                    var menuItem = tree.Add(menuPath, node).LastOrDefault();
+                    if (menuItem != null)
+                        menuItem.Name = displayLabel;
+                    nodeLabelCache[node] = displayLabel;
                 }
             }
 
@@ -125,8 +128,8 @@ namespace Miemie.DialogSystem.Editor
             return tree;
         }
 
-        static string BuildNodeLabel(DialogueNode node) =>
-            $"[{node.NodeId}] {node.SpeakerName}: {DialogueMenuTreeUtility.Truncate(node.DialogText, 12)}";
+        static string BuildNodeMenuPath(string basePath, DialogueNode node) =>
+            $"{basePath}/[{node.NodeId}] {DialogueMenuTreeUtility.SanitizeMenuPath(node.name)}";
 
         void RefreshMenuLabelsIfNeeded()
         {
@@ -152,7 +155,7 @@ namespace Miemie.DialogSystem.Editor
                 if (!IsAssetAlive(node))
                     continue;
 
-                string newLabel = BuildNodeLabel(node);
+                string newLabel = DialogueMenuTreeUtility.BuildNodeHeader(node);
                 if (!nodeLabelCache.TryGetValue(node, out var oldLabel) || oldLabel != newLabel)
                 {
                     nodeLabelCache[node] = newLabel;
