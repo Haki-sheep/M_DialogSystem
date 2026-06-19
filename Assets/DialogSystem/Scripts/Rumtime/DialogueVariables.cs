@@ -33,7 +33,6 @@ namespace Miemie.DialogSystem
                         SetInt(param.name, param.defaultInt);
                         break;
                     case E_DialogueParameterType.Bool:
-                    case E_DialogueParameterType.Trigger:
                         SetBool(param.name, param.defaultBool);
                         break;
                 }
@@ -132,21 +131,6 @@ namespace Miemie.DialogSystem
 
             intEntries.Add(new IntEntry { key = key, value = value });
         }
-
-        /// <summary>
-        /// 设置触发器
-        /// </summary>
-        public void SetTrigger(string key) => SetBool(key, true);
-
-        /// <summary>
-        /// 触发器是否已触发
-        /// </summary>
-        public bool IsTriggerSet(string key) => GetBool(key);
-
-        /// <summary>
-        /// 消耗触发器
-        /// </summary>
-        public void ResetTrigger(string key) => SetBool(key, false);
 
         [Serializable]
         struct BoolEntry

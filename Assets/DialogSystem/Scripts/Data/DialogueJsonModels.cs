@@ -83,7 +83,7 @@ namespace Miemie.DialogSystem
         public string labelText;
         /// <summary> 目标节点ID </summary>
         public int toNodeId;
-        public List<DialogueConditionJson> conditions = new();
+        public List<DialogueConditionJson> conditionList = new();
     }
 
     /// <summary>

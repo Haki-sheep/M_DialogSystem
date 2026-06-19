@@ -48,22 +48,6 @@ namespace Miemie.DialogSystem
             return true;
         }
 
-        /// <summary>
-        /// 收集本选项上的触发器条件
-        /// </summary>
-        public void CollectTriggerKeys(List<string> result)
-        {
-            EnsureConditionsList();
-            if (conditions == null || result == null)
-                return;
-
-            foreach (var item in conditions)
-            {
-                if (item != null && item.IsTriggerCondition && !string.IsNullOrEmpty(item.key))
-                    result.Add(item.key);
-            }
-        }
-
         void EnsureConditionsList()
         {
             if (conditions == null)

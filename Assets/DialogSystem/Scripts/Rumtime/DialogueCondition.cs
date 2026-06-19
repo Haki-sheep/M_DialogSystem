@@ -56,16 +56,9 @@ namespace Miemie.DialogSystem
                 E_Condition.IntLess => vars.GetInt(key) < targetInt,
                 E_Condition.IntGreaterOrEqual => vars.GetInt(key) >= targetInt,
                 E_Condition.IntLessOrEqual => vars.GetInt(key) <= targetInt,
-                E_Condition.Trigger => vars.IsTriggerSet(key),
-                E_Condition.TriggerNotSet => !vars.IsTriggerSet(key),
                 _ => false,
             };
         }
-
-        /// <summary>
-        /// 是否为会消耗触发器的条件
-        /// </summary>
-        public bool IsTriggerCondition => e_Condition == E_Condition.Trigger;
 
         public static bool IsFloatThresholdType(E_Condition type) =>
             type is E_Condition.FloatGreater or E_Condition.FloatLess
@@ -100,11 +93,6 @@ namespace Miemie.DialogSystem
                     E_Condition.BoolTrue,
                     E_Condition.BoolFalse,
                 },
-                E_DialogueParameterType.Trigger => new[]
-                {
-                    E_Condition.Trigger,
-                    E_Condition.TriggerNotSet,
-                },
                 _ => Array.Empty<E_Condition>(),
             };
 
@@ -122,8 +110,6 @@ namespace Miemie.DialogSystem
                 E_Condition.IntNotEquals => "不等于",
                 E_Condition.BoolTrue => "是",
                 E_Condition.BoolFalse => "否",
-                E_Condition.Trigger => "触发",
-                E_Condition.TriggerNotSet => "不触发",
                 E_Condition.None => "无",
                 _ => condition.ToString(),
             };

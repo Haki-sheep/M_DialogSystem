@@ -10,63 +10,35 @@ namespace Miemie.DialogSystem
     [Serializable]
     public class DialogueTransition
     {
+        /// <summary> 跳向的节点 </summary>
         public DialogueNode toNode;
 
+        /// <summary> 条件列表 </summary>
         [SerializeField]
-        List<DialogueCondition> conditions = new();
+        List<DialogueCondition> conditionList = new();
 
-        public List<DialogueCondition> Conditions => conditions;
-
-        /// <summary>
-        /// 获取有效条件列表
-        /// </summary>
-        public List<DialogueCondition> GetEffectiveConditions()
-        {
-            EnsureConditionsList();
-            return conditions;
-        }
+        public List<DialogueCondition> ConditionList => conditionList;
 
         /// <summary>
         /// 判断跳转是否可通过
         /// </summary>
         public bool CanPass(DialogueVariables vars)
         {
-            EnsureConditionsList();
-
-            if (conditions == null || conditions.Count == 0)
+            if (conditionList == null || conditionList.Count == 0)
                 return true;
 
-            foreach (var item in conditions)
+            foreach (var item in conditionList)
             {
+                // 如果条件为空或为无条件 则跳过
                 if (item == null || item.NoneContion)
                     continue;
+
+                // 如果条件不满足 则返回false
                 if (!item.MeetCondition(vars))
                     return false;
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// 收集触发器条件
-        /// </summary>
-        public void CollectTriggerKeys(List<string> result)
-        {
-            EnsureConditionsList();
-            if (conditions == null || result == null)
-                return;
-
-            foreach (var item in conditions)
-            {
-                if (item != null && item.IsTriggerCondition && !string.IsNullOrEmpty(item.key))
-                    result.Add(item.key);
-            }
-        }
-
-        void EnsureConditionsList()
-        {
-            if (conditions == null)
-                conditions = new List<DialogueCondition>();
         }
     }
 }

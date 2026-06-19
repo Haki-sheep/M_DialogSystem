@@ -19,9 +19,7 @@ namespace Miemie.DialogSystem
         IntGreaterOrEqual = 11,
         IntLess = 12,
         IntLessOrEqual = 13,
-        Trigger = 14,
         BoolTrue = 15,
         BoolFalse = 16,
-        TriggerNotSet = 17,
     }
 }

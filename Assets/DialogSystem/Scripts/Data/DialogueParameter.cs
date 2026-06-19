@@ -11,7 +11,6 @@ namespace Miemie.DialogSystem
         Float,
         Int,
         Bool,
-        Trigger,
     }
 
     /// <summary>

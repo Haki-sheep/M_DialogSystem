@@ -11,7 +11,6 @@ namespace Miemie.DialogSystem
         [SerializeField, ReadOnly] private DialogueNode currentNode;
 
         readonly List<DialogueChoice> availableChoices = new();
-        readonly List<string> triggerBuffer = new();
 
         public DialogueNode CurrentNode => currentNode;
 
@@ -113,7 +112,6 @@ namespace Miemie.DialogSystem
                 return;
             }
 
-            ConsumeTriggers(transition);
             GoTo(transition.toNode);
         }
 
@@ -126,7 +124,6 @@ namespace Miemie.DialogSystem
             if (index < 0 || index >= availableChoices.Count) return;
 
             var choice = availableChoices[index];
-            ConsumeTriggers(choice);
             GoTo(choice.toNode);
         }
 
@@ -160,28 +157,6 @@ namespace Miemie.DialogSystem
 
             for (int i = 0; i < availableChoices.Count; i++)
                 Debug.Log($"  [{i + 1}] {availableChoices[i].labelText}");
-        }
-
-        void ConsumeTriggers(DialogueTransition transition)
-        {
-            if (transition == null || variables == null)
-                return;
-
-            triggerBuffer.Clear();
-            transition.CollectTriggerKeys(triggerBuffer);
-            foreach (var key in triggerBuffer)
-                variables.ResetTrigger(key);
-        }
-
-        void ConsumeTriggers(DialogueChoice choice)
-        {
-            if (choice == null || variables == null)
-                return;
-
-            triggerBuffer.Clear();
-            choice.CollectTriggerKeys(triggerBuffer);
-            foreach (var key in triggerBuffer)
-                variables.ResetTrigger(key);
         }
     }
 }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Miemie.DialogSystem
 {
+    /// <summary>
+    /// 普通对话节点
+    /// </summary>
     [CreateAssetMenu(fileName = "New Dialog Node", menuName = "Dialog System/Dialog Node")]
     public class DialogueNode : ScriptableObject
     {
@@ -11,15 +14,21 @@ namespace Miemie.DialogSystem
         /// <summary> 节点ID </summary>
         [SerializeField]
         private int nodeId;
-        /// <summary> 说话类型 </summary>
-        [SerializeField] private SpeakEnums speakType;
-        /// <summary> 说话者名称 </summary>
-        [SerializeField] private string speakerName;
-        /// <summary> 对话文本 </summary>
-        [SerializeField] private string dialogText;
 
+        /// <summary> 说话类型 </summary>
+        [SerializeField]
+        private SpeakEnums speakType;
+
+        /// <summary> 说话者名称 </summary>
+        [SerializeField]
+        private string speakerName;
+
+        /// <summary> 对话文本 </summary>
+        [SerializeField]
+        private string dialogText;
         /// <summary> 是否是选项节点 </summary>
-        [SerializeField] private bool isOptionNode;
+        [SerializeField]
+        private bool isOptionNode;
 
         /// <summary> 普通节点下一跳 </summary>
         [HideInInspector][SerializeField]
@@ -28,6 +37,7 @@ namespace Miemie.DialogSystem
         /// <summary> 选项出口 </summary>
         [HideInInspector][SerializeField]
         private List<DialogueChoice> choiceList = new();
+
         #endregion
 
         #region 属性

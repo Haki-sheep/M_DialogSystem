@@ -194,7 +194,7 @@ namespace Miemie.DialogSystem.Editor
                     {
                         labelText = choice.labelText,
                         toNodeId = choice.toNode != null ? choice.toNode.NodeId : 0,
-                        conditions = ToConditionsModel(choice.GetEffectiveConditions()),
+                        conditionList = ToConditionsModel(choice.GetEffectiveConditions()),
                     });
                 }
             }
@@ -202,7 +202,7 @@ namespace Miemie.DialogSystem.Editor
             {
                 var transition = node.NextTransition;
                 nodeJson.nextNodeId = transition?.toNode != null ? transition.toNode.NodeId : 0;
-                nodeJson.transitionConditionList = ToConditionsModel(transition?.GetEffectiveConditions());
+                nodeJson.transitionConditionList = ToConditionsModel(transition?.ConditionList);
             }
 
             return nodeJson;
@@ -388,7 +388,7 @@ namespace Miemie.DialogSystem.Editor
                 {
                     elem.FindPropertyRelative("labelText").stringValue = choice.labelText ?? string.Empty;
                     elem.FindPropertyRelative("toNode").objectReferenceValue = ResolveNode(choice.toNodeId, idMap);
-                    WriteConditions(elem.FindPropertyRelative("conditions"), choice.conditions);
+                    WriteConditions(elem.FindPropertyRelative("conditions"), choice.conditionList);
                 }
             }
         }

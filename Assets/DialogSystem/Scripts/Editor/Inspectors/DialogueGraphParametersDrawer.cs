@@ -75,9 +75,6 @@ namespace Miemie.DialogSystem.Editor
                 case E_DialogueParameterType.Bool:
                     boolProp.boolValue = EditorGUILayout.Toggle("默认值", boolProp.boolValue);
                     break;
-                case E_DialogueParameterType.Trigger:
-                    EditorGUILayout.LabelField("默认值", "运行时 SetTrigger 触发");
-                    break;
             }
 
             EditorGUILayout.EndVertical();
@@ -89,7 +86,6 @@ namespace Miemie.DialogSystem.Editor
             menu.AddItem(new GUIContent("Float"), false, () => AddParameter(graph, parametersProp, E_DialogueParameterType.Float));
             menu.AddItem(new GUIContent("Int"), false, () => AddParameter(graph, parametersProp, E_DialogueParameterType.Int));
             menu.AddItem(new GUIContent("Bool"), false, () => AddParameter(graph, parametersProp, E_DialogueParameterType.Bool));
-            menu.AddItem(new GUIContent("Trigger"), false, () => AddParameter(graph, parametersProp, E_DialogueParameterType.Trigger));
             menu.ShowAsContext();
         }
 
@@ -120,7 +116,6 @@ namespace Miemie.DialogSystem.Editor
                 E_DialogueParameterType.Float => "New Float",
                 E_DialogueParameterType.Int => "New Int",
                 E_DialogueParameterType.Bool => "New Bool",
-                E_DialogueParameterType.Trigger => "New Trigger",
                 _ => "New Param",
             };
 
