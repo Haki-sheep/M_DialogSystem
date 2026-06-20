@@ -11,11 +11,10 @@ namespace Miemie.DialogSystem
     [Serializable]
     public class DialogueCondition
     {
-        /// <summary> 条件类型 </summary>
-        public ECondition eCondition;
         /// <summary> 参数名 </summary>
         public string key;
-
+        /// <summary> 条件类型 </summary>
+        public ECondition eCondition;
         /// <summary> 浮点阈值 </summary>
         [ShowIf(nameof(IsFloatCondition))]
         public float targetFloat;

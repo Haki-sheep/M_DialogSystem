@@ -89,7 +89,7 @@ namespace Miemie.DialogSystem.Editor
         public void SyncChoicePorts()
         {
             if (Node.ChoiceList == null || Node.ChoiceList.Count == 0)
-                Node.AddChoiceNode(new DialogueOptionTransition { labelText = "选项1" });
+                Node.AddChoice(new DialogueTransition { labelText = "选项1" });
 
             while (outputPorts.Count > Node.ChoiceList.Count)
             {

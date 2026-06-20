@@ -38,7 +38,7 @@ namespace Miemie.DialogSystem
         /// <summary> 选项出口 </summary>
         [HideInInspector]
         [SerializeField]
-        private List<DialogueOptionTransition> choiceList = new();
+        private List<DialogueTransition> choiceList = new();
 
         #endregion
 
@@ -57,7 +57,7 @@ namespace Miemie.DialogSystem
                 return nextTransition;
             }
         }
-        public List<DialogueOptionTransition> ChoiceList => choiceList;
+        public List<DialogueTransition> ChoiceList => choiceList;
         #endregion
 
         #region 方法
@@ -103,17 +103,17 @@ namespace Miemie.DialogSystem
         /// <summary>
         /// 添加选项节点
         /// </summary>
-        public void AddChoiceNode(DialogueOptionTransition choice)
+        public void AddChoice(DialogueTransition choice)
         {
             if (choiceList is null)
-                choiceList = new List<DialogueOptionTransition>();
+                choiceList = new List<DialogueTransition>();
             choiceList.Add(choice);
         }
 
         /// <summary>
         /// 移除选项
         /// </summary>
-        public void RemoveChoiceNode(DialogueOptionTransition choice)
+        public void RemoveChoice(DialogueTransition choice)
         {
             if (choiceList is not null)
                 choiceList.Remove(choice);
@@ -134,7 +134,7 @@ namespace Miemie.DialogSystem
         /// <summary>
         /// 获取选项
         /// </summary>
-        public DialogueOptionTransition GetChoice(int index)
+        public DialogueTransition GetChoice(int index)
         {
             if (choiceList is not null && index >= 0 && index < choiceList.Count)
                 return choiceList[index];

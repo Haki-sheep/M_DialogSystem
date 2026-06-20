@@ -59,7 +59,7 @@ namespace Miemie.DialogSystem.Editor
         static void DrawOptionTransition(DialogueTransitionHandle handle, SerializedObject sourceSo)
         {
             var choiceListProp = sourceSo.FindProperty("choiceList");
-            int choiceIndex = FindOptionTransitionIndex(handle.sourceNode, handle.optionTransition);
+            int choiceIndex = FindChoiceIndex(handle.sourceNode, handle.choiceTransition);
             if (choiceIndex < 0)
             {
                 EditorGUILayout.HelpBox("找不到对应选项跳转数据", MessageType.Warning);
@@ -162,14 +162,14 @@ namespace Miemie.DialogSystem.Editor
             conditionProp.FindPropertyRelative("eCondition").intValue = (int)defaultType;
         }
 
-        static int FindOptionTransitionIndex(DialogueNode node, DialogueOptionTransition optionTransition)
+        static int FindChoiceIndex(DialogueNode node, DialogueTransition choice)
         {
-            if (node?.ChoiceList == null || optionTransition == null)
+            if (node?.ChoiceList == null || choice == null)
                 return -1;
 
             for (int i = 0; i < node.ChoiceList.Count; i++)
             {
-                if (ReferenceEquals(node.ChoiceList[i], optionTransition))
+                if (ReferenceEquals(node.ChoiceList[i], choice))
                     return i;
             }
 

@@ -71,13 +71,13 @@ namespace Miemie.DialogSystem
         /// <summary> 普通节点下一跳条件 </summary>
         public List<DialogueConditionJson> transitionConditionList = new();
         /// <summary> 选项列表 </summary>
-        public List<DialogueOptionTransitionJson> choiceList = new();
+        public List<DialogueTransitionJson> choiceList = new();
     }
 
     /// <summary>
-    /// 选项跳转Json
+    /// 跳转 Json 选项出口带 labelText
     /// </summary>
-    public class DialogueOptionTransitionJson
+    public class DialogueTransitionJson
     {
         /// <summary> 选项文本 </summary>
         public string labelText;

@@ -20,7 +20,7 @@ namespace Miemie.DialogSystem
         private DialogueNode currentNode;
 
         /// <summary> 可用选项列表 </summary>
-        private readonly List<DialogueOptionTransition> availableChoiceList = new();
+        private readonly List<DialogueTransition> availableChoiceList = new();
 
         // 属性
         public DialogueNode CurrentNode => currentNode;

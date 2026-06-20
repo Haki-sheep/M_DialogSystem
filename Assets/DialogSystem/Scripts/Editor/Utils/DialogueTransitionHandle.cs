@@ -11,9 +11,9 @@ namespace Miemie.DialogSystem.Editor
         public DialogueGraph graph;
         public DialogueNode sourceNode;
         public DialogueNode targetNode;
-        public DialogueOptionTransition optionTransition;
+        public DialogueTransition choiceTransition;
 
-        public bool IsOptionTransition => optionTransition != null;
+        public bool IsOptionTransition => choiceTransition != null;
 
         public string Title
         {

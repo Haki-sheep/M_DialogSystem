@@ -21,13 +21,23 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 67231b5ba10cd3d4c879c8fb548580ed, type: 2}
   - {fileID: 11400000, guid: 132043c61f731e04da43aac35b89eda1, type: 2}
   parameterList:
-  - name: New Int
-    parameterType: 2
+  - name: New Float
+    parameterType: 0
     defaultFloat: 0
     defaultInt: 0
     defaultBool: 0
-  - name: New Float
+  - name: New Float 1
     parameterType: 0
+    defaultFloat: 0
+    defaultInt: 0
+    defaultBool: 0
+  - name: New Float 2
+    parameterType: 0
+    defaultFloat: 0
+    defaultInt: 0
+    defaultBool: 0
+  - name: New Bool
+    parameterType: 2
     defaultFloat: 0
     defaultInt: 0
     defaultBool: 0

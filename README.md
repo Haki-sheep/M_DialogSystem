@@ -84,8 +84,8 @@ Unity 节点式对话系统，带可视化 GraphView 编辑器，支持分支条
 |-----------------|--------|--------|
 | 大方块（节点） | `DialogueNode` | `DialogueGraph.nodeList` |
 | 普通节点 `Out` 口 + 连线 | `DialogueTransition` | `DialogueNode.nextTransition` |
-| 选项节点 `选项1/2/3` 口 + 连线 | `DialogueOptionTransition` | `DialogueNode.choiceList` |
-| 连线上的条件 | `DialogueCondition` | `Transition/OptionTransition.conditionList` |
+| 选项节点 `选项1/2/3` 口 + 连线 | `DialogueTransition`（带 `labelText`） | `DialogueNode.choiceList` |
+| 连线上的条件 | `DialogueCondition` | `DialogueTransition.conditionList` |
 | 左侧 Parameters 一行 | `DialogueParameterDefinition` | `DialogueGraph.parameterList` |
 
 选中 **Transition** 连线 → 右侧显示普通跳转条件。  
@@ -109,8 +109,7 @@ Assets/DialogSystem/Scripts/
 │   │   ├── DialogueConditionTypes.cs   # ECondition 枚举
 │   │   └── DialogueVariables.cs        # 运行时变量（Odin 字典）
 │   ├── Transition/
-│   │   ├── DialogueTransition.cs       # 普通单出口
-│   │   └── DialogueOptionTransition.cs # 选项多出口
+│   │   └── DialogueTransition.cs       # 跳转 普通 Out 与选项出口共用
 │   └── SperakTypes/
 │       └── DialogueSpeakEnums.cs
 └── Editor/
@@ -200,7 +199,7 @@ StartDialog()
 整体思路类似 **Animator 状态机**：
 
 - `DialogueNode` ≈ State
-- `DialogueTransition` / `DialogueOptionTransition` ≈ Transition（带条件）
+- `DialogueTransition` ≈ Transition（带条件，选项时填 `labelText`）
 - `DialogueCondition` ≈ Condition 单条
 - `DialogueParameterDefinition` ≈ Animator Parameters
 - `DialogueVariables` ≈ 运行时 Parameter 当前值

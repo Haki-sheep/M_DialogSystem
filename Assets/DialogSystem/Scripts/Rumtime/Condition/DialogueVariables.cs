@@ -21,12 +21,12 @@ namespace Miemie.DialogSystem
         /// <summary>
         /// 用对话图参数定义初始化默认值
         /// </summary>
-        public void ApplyDefaults(IReadOnlyList<DialogueParameterDefinition> parameters)
+        public void ApplyDefaults(IReadOnlyList<DialogueParameterDefinition> parameterList)
         {
-            if (parameters == null)
+            if (parameterList == null)
                 return;
 
-            foreach (var param in parameters)
+            foreach (var param in parameterList)
             {
                 if (param == null || string.IsNullOrEmpty(param.name))
                     continue;

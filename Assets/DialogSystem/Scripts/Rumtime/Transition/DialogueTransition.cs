@@ -6,15 +6,16 @@ using UnityEngine.Serialization;
 namespace Miemie.DialogSystem
 {
     /// <summary>
-    /// 对话跳转类 
-    /// 可以理解为其是连接节点的那根线
-    /// 只不过线只是作为条件的载体,其持有但不做具体判断
-    /// 真正在条件判断是在DialogueCondition类内
-    /// 普通节点只持有一个跳转 选项节点持有多个跳转
+    /// 对话跳转
+    /// 普通节点 Out 与选项节点出口共用
+    /// labelText 仅选项出口使用
     /// </summary>
     [Serializable]
     public class DialogueTransition
     {
+        /// <summary> 选项文本 普通跳转可留空 </summary>
+        public string labelText;
+
         /// <summary> 跳向的节点 </summary>
         public DialogueNode toNode;
 

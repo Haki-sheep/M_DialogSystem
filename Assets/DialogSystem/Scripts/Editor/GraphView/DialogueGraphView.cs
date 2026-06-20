@@ -138,8 +138,8 @@ namespace Miemie.DialogSystem.Editor
                 targetNode = targetView?.Node,
             };
 
-            if (edge.userData is DialogueOptionTransition optionTransition)
-                handle.optionTransition = optionTransition;
+            if (edge.userData is DialogueTransition choiceTransition)
+                handle.choiceTransition = choiceTransition;
             else if (!sourceView.Node.IsOptionNode)
                 handle.targetNode = targetView?.Node;
             else
