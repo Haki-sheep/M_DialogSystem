@@ -20,20 +20,20 @@ namespace Miemie.DialogSystem.Editor
     }
 
     /// <summary>
-    /// Parameters 参数面板
+    /// Variables 变量面板
     /// </summary>
-    static class DialogueGraphParametersPanel
+    static class DialogueGraphVariablesPanel
     {
         public static void Draw(DialogueGraphEditorWindow window)
         {
-            float panelWidth = window.GetParametersPanelWidth();
+            float panelWidth = window.GetVariablesPanelWidth();
             EditorGUILayout.BeginVertical(GUILayout.Width(panelWidth), GUILayout.ExpandHeight(true));
-            DialogueEditorPanelStyles.DrawPanelHeader("Parameters", window.GetActiveGraph()?.name ?? "未选中图");
+            DialogueEditorPanelStyles.DrawPanelHeader("Variables", window.GetActiveGraph()?.name ?? "未选中图");
             DialogueEditorPanelStyles.BeginPaddedContent();
 
-            var scroll = window.ParametersScroll;
-            DialogueGraphParametersDrawer.Draw(window.GetActiveGraph(), ref scroll, panelWidth);
-            window.ParametersScroll = scroll;
+            var scroll = window.VariablesScroll;
+            DialogueGraphVariablesDrawer.Draw(window.GetActiveGraph(), ref scroll, panelWidth);
+            window.VariablesScroll = scroll;
 
             DialogueEditorPanelStyles.EndPaddedContent();
             EditorGUILayout.EndVertical();

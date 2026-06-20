@@ -20,24 +20,24 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a1415e40fc5b2e7439f04834ce44f39c, type: 2}
   - {fileID: 11400000, guid: 67231b5ba10cd3d4c879c8fb548580ed, type: 2}
   - {fileID: 11400000, guid: 132043c61f731e04da43aac35b89eda1, type: 2}
-  parameterList:
-  - name: New Float
-    parameterType: 0
+  variableList:
+  - name: Gold
+    variableType: 0
     defaultFloat: 0
     defaultInt: 0
     defaultBool: 0
   - name: New Float 1
-    parameterType: 0
+    variableType: 0
     defaultFloat: 0
     defaultInt: 0
     defaultBool: 0
   - name: New Float 2
-    parameterType: 0
+    variableType: 0
     defaultFloat: 0
     defaultInt: 0
     defaultBool: 0
   - name: New Bool
-    parameterType: 2
+    variableType: 2
     defaultFloat: 0
     defaultInt: 0
     defaultBool: 0

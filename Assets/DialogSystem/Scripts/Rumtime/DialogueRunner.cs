@@ -11,9 +11,9 @@ namespace Miemie.DialogSystem
         [SerializeField]
         private DialogueGraph dialogueGraph;
 
-        /// <summary> 对话变量列表 </summary>
+        /// <summary> 运行时变量 </summary>
         [OdinSerialize]
-        private DialogueVariables variableList = new();
+        DialogueVariablesStore variables = new();
         
         /// <summary> 当前节点 </summary>
         [SerializeField, ReadOnly] 
@@ -64,7 +64,7 @@ namespace Miemie.DialogSystem
                 return;
             }
 
-            variableList?.ApplyDefaults(dialogueGraph.Parameters);
+            variables?.ApplyDefaults(dialogueGraph.Variables);
             GoTo(dialogueGraph.StartNode);
         }
 
@@ -117,7 +117,7 @@ namespace Miemie.DialogSystem
                 return;
             }
 
-            if (!transition.CanPass(variableList))
+            if (!transition.CanPass(variables))
             {
                 Debug.Log("连线条件未满足");
                 return;
@@ -149,7 +149,7 @@ namespace Miemie.DialogSystem
             foreach (var c in currentNode.ChoiceList)
             {
                 if (c == null || c.toNode == null) continue;
-                if (c.CanPass(variableList))
+                if (c.CanPass(variables))
                     availableChoiceList.Add(c);
             }
         }

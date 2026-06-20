@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Miemie.DialogSystem
 {
@@ -21,7 +20,6 @@ namespace Miemie.DialogSystem
 
         /// <summary> 条件列表 </summary>
         [SerializeField]
-        [FormerlySerializedAs("conditions")]
         List<DialogueCondition> conditionList = new();
 
         public List<DialogueCondition> ConditionList => conditionList;
@@ -29,7 +27,7 @@ namespace Miemie.DialogSystem
         /// <summary>
         /// 判断跳转是否可通过
         /// </summary>
-        public bool CanPass(DialogueVariables vars)
+        public bool CanPass(DialogueVariablesStore variables)
         {
             if (conditionList == null || conditionList.Count == 0)
                 return true;
@@ -39,7 +37,7 @@ namespace Miemie.DialogSystem
                 if (item == null || item.NoneContion)
                     continue;
 
-                if (!item.MeetCondition(vars))
+                if (!item.MeetCondition(variables))
                     return false;
             }
 

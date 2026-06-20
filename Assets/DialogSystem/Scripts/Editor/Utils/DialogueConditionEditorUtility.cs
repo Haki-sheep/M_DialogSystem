@@ -16,24 +16,24 @@ namespace Miemie.DialogSystem.Editor
                 or ECondition.IntEquals or ECondition.IntNotEquals;
 
         /// <summary>
-        /// 根据参数类型获取可用条件
+        /// 根据变量类型获取可用条件
         /// </summary>
-        public static ECondition[] GetConditionOptions(EDialogueParameterType parameterType) =>
-            parameterType switch
+        public static ECondition[] GetConditionOptions(EDialogueVariableType variableType) =>
+            variableType switch
             {
-                EDialogueParameterType.Float => new[]
+                EDialogueVariableType.Float => new[]
                 {
                     ECondition.FloatGreater,
                     ECondition.FloatLess,
                 },
-                EDialogueParameterType.Int => new[]
+                EDialogueVariableType.Int => new[]
                 {
                     ECondition.IntGreater,
                     ECondition.IntLess,
                     ECondition.IntEquals,
                     ECondition.IntNotEquals,
                 },
-                EDialogueParameterType.Bool => new[]
+                EDialogueVariableType.Bool => new[]
                 {
                     ECondition.BoolTrue,
                     ECondition.BoolFalse,

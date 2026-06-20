@@ -6,7 +6,7 @@ namespace Miemie.DialogSystem
 {
     /// <summary>
     /// 对话图
-    /// 该图包含自身信息 图参数 连接节点
+    /// 该图包含自身信息 图变量 连接节点
     /// 图的运行从startNode开始,因此其一定不能为null
     /// </summary>
     [CreateAssetMenu(fileName = "New Dialogue Graph", menuName = "Dialog System/Dialogue Graph")]
@@ -26,9 +26,9 @@ namespace Miemie.DialogSystem
         [SerializeField]
         private List<DialogueNode> nodeList = new();
         
-        /// <summary> 图参数 </summary>
+        /// <summary> 图变量声明 </summary>
         [SerializeField, HideInInspector]
-        private List<DialogueParameterDefinition> parameterList = new();
+        private List<DialogueVariableDef> variableList = new();
         #endregion
 
         #region 属性
@@ -36,7 +36,7 @@ namespace Miemie.DialogSystem
         public string GraphName => graphName;
         public DialogueNode StartNode => startNode;
         public List<DialogueNode> NodeList => nodeList;
-        public List<DialogueParameterDefinition> Parameters => parameterList;
+        public List<DialogueVariableDef> Variables => variableList;
         #endregion
 
         #region 方法
@@ -64,17 +64,17 @@ namespace Miemie.DialogSystem
         }
 
         /// <summary>
-        /// 查找参数定义
+        /// 查找变量声明
         /// </summary>
-        public DialogueParameterDefinition FindParameter(string paramName)
+        public DialogueVariableDef FindVariable(string variableName)
         {
-            if (string.IsNullOrEmpty(paramName) || parameterList == null)
+            if (string.IsNullOrEmpty(variableName) || variableList == null)
                 return null;
 
-            foreach (var param in parameterList)
+            foreach (var def in variableList)
             {
-                if (param != null && param.name == paramName)
-                    return param;
+                if (def != null && def.name == variableName)
+                    return def;
             }
 
             return null;

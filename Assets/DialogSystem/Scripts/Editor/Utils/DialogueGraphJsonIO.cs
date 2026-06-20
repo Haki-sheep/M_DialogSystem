@@ -148,20 +148,20 @@ namespace Miemie.DialogSystem.Editor
                 }
             }
 
-            if (graph.Parameters != null)
+            if (graph.Variables != null)
             {
-                foreach (var param in graph.Parameters)
+                foreach (var def in graph.Variables)
                 {
-                    if (param == null)
+                    if (def == null)
                         continue;
 
-                    model.parameters.Add(new DialogueParameterJson
+                    model.variables.Add(new DialogueVariableJson
                     {
-                        name = param.name,
-                        parameterType = param.parameterType.ToString(),
-                        defaultFloat = param.defaultFloat,
-                        defaultInt = param.defaultInt,
-                        defaultBool = param.defaultBool,
+                        name = def.name,
+                        variableType = def.variableType.ToString(),
+                        defaultFloat = def.defaultFloat,
+                        defaultInt = def.defaultInt,
+                        defaultBool = def.defaultBool,
                     });
                 }
             }
@@ -232,7 +232,7 @@ namespace Miemie.DialogSystem.Editor
             return new DialogueConditionJson
             {
                 conditionType = condition.eCondition.ToString(),
-                key = condition.key,
+                variableName = condition.variableName,
                 targetFloat = condition.targetFloat,
                 targetInt = condition.targetInt,
             };
@@ -297,7 +297,7 @@ namespace Miemie.DialogSystem.Editor
             graphSo.FindProperty("graphName").stringValue = model.graphName ?? string.Empty;
             graphSo.FindProperty("startNode").objectReferenceValue =
                 model.startNodeId != 0 && idMap.TryGetValue(model.startNodeId, out var startNode) ? startNode : null;
-            ApplyParameters(graphSo.FindProperty("parameterList"), model.parameters);
+            ApplyVariables(graphSo.FindProperty("variableList"), model.variables);
             graphSo.ApplyModifiedPropertiesWithoutUndo();
 
             var importedLayouts = new List<(DialogueNode node, Vector2 position)>();
@@ -392,31 +392,31 @@ namespace Miemie.DialogSystem.Editor
             }
         }
 
-        static void ApplyParameters(SerializedProperty parametersProp, List<DialogueParameterJson> parameters)
+        static void ApplyVariables(SerializedProperty variableListProp, List<DialogueVariableJson> variableJsonList)
         {
-            if (parametersProp == null)
+            if (variableListProp == null)
                 return;
 
-            parametersProp.ClearArray();
-            if (parameters == null)
+            variableListProp.ClearArray();
+            if (variableJsonList == null)
                 return;
 
-            foreach (var paramJson in parameters)
+            foreach (var variableJson in variableJsonList)
             {
-                if (paramJson == null)
+                if (variableJson == null)
                     continue;
 
-                parametersProp.InsertArrayElementAtIndex(parametersProp.arraySize);
-                var elem = parametersProp.GetArrayElementAtIndex(parametersProp.arraySize - 1);
-                elem.FindPropertyRelative("name").stringValue = paramJson.name ?? string.Empty;
+                variableListProp.InsertArrayElementAtIndex(variableListProp.arraySize);
+                var elem = variableListProp.GetArrayElementAtIndex(variableListProp.arraySize - 1);
+                elem.FindPropertyRelative("name").stringValue = variableJson.name ?? string.Empty;
 
-                if (!string.IsNullOrEmpty(paramJson.parameterType) &&
-                    System.Enum.TryParse(paramJson.parameterType, out EDialogueParameterType paramType))
-                    elem.FindPropertyRelative("parameterType").enumValueIndex = (int)paramType;
+                if (!string.IsNullOrEmpty(variableJson.variableType) &&
+                    System.Enum.TryParse(variableJson.variableType, out EDialogueVariableType variableType))
+                    elem.FindPropertyRelative("variableType").enumValueIndex = (int)variableType;
 
-                elem.FindPropertyRelative("defaultFloat").floatValue = paramJson.defaultFloat;
-                elem.FindPropertyRelative("defaultInt").intValue = paramJson.defaultInt;
-                elem.FindPropertyRelative("defaultBool").boolValue = paramJson.defaultBool;
+                elem.FindPropertyRelative("defaultFloat").floatValue = variableJson.defaultFloat;
+                elem.FindPropertyRelative("defaultInt").intValue = variableJson.defaultInt;
+                elem.FindPropertyRelative("defaultBool").boolValue = variableJson.defaultBool;
             }
         }
 
@@ -446,7 +446,7 @@ namespace Miemie.DialogSystem.Editor
                 System.Enum.TryParse(conditionJson.conditionType, out conditionType);
 
             conditionProp.FindPropertyRelative("eCondition").intValue = (int)conditionType;
-            conditionProp.FindPropertyRelative("key").stringValue = conditionJson.key ?? string.Empty;
+            conditionProp.FindPropertyRelative("variableName").stringValue = conditionJson.variableName ?? string.Empty;
             conditionProp.FindPropertyRelative("targetFloat").floatValue = conditionJson.targetFloat;
             conditionProp.FindPropertyRelative("targetInt").intValue = conditionJson.targetInt;
         }

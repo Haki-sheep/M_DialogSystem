@@ -113,31 +113,31 @@
       "linkList": []
     }
   ],
-  "parameters": [
+  "variables": [
     {
       "name": "New Float",
-      "parameterType": "Float",
+      "variableType": "Float",
       "defaultFloat": 0.0,
       "defaultInt": 0,
       "defaultBool": false
     },
     {
       "name": "New Float 1",
-      "parameterType": "Float",
+      "variableType": "Float",
       "defaultFloat": 0.0,
       "defaultInt": 0,
       "defaultBool": false
     },
     {
       "name": "New Float 2",
-      "parameterType": "Float",
+      "variableType": "Float",
       "defaultFloat": 0.0,
       "defaultInt": 0,
       "defaultBool": false
     },
     {
       "name": "New Bool",
-      "parameterType": "Bool",
+      "variableType": "Bool",
       "defaultFloat": 0.0,
       "defaultInt": 0,
       "defaultBool": false

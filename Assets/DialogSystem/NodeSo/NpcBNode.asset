@@ -18,15 +18,21 @@ MonoBehaviour:
   dialogText: "\u6211\u662FNPC"
   isOptionNode: 1
   nextTransition:
+    labelText: 
     toNode: {fileID: 0}
     conditionList: []
   choiceList:
-  - labelText: 
+  - labelText: A
     toNode: {fileID: 11400000, guid: 67231b5ba10cd3d4c879c8fb548580ed, type: 2}
-    conditionList: []
-  - labelText: 
+    conditionList:
+    - variableName: Gold
+      eCondition: 10
+      targetFloat: 100
+      targetInt: 0
+  - labelText: B
     toNode: {fileID: 11400000, guid: 132043c61f731e04da43aac35b89eda1, type: 2}
-    conditionList: []
-  - labelText: "\u9009\u98793"
-    toNode: {fileID: 0}
-    conditionList: []
+    conditionList:
+    - variableName: Gold
+      eCondition: 11
+      targetFloat: 100
+      targetInt: 0

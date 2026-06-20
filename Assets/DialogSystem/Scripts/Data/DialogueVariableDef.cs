@@ -4,9 +4,9 @@ using UnityEngine;
 namespace Miemie.DialogSystem
 {
     /// <summary>
-    /// 跳转参数类型枚举
+    /// 对话变量类型
     /// </summary>
-    public enum EDialogueParameterType
+    public enum EDialogueVariableType
     {
         Float,
         Int,
@@ -14,19 +14,19 @@ namespace Miemie.DialogSystem
     }
 
     /// <summary>
-    /// 对话图参数类
-    /// 就是Editor窗口中Parameters面板中一条信息
+    /// 对话图变量声明
+    /// Editor 窗口 Variables 面板中一条
     /// </summary>
     [Serializable]
-    public class DialogueParameterDefinition
+    public class DialogueVariableDef
     {
-        /// <summary> 参数名 </summary>
+        /// <summary> 变量名 </summary>
         [SerializeField]
         public string name;
 
-        /// <summary> 参数类型 </summary>
+        /// <summary> 变量类型 </summary>
         [SerializeField]
-        public EDialogueParameterType parameterType;
+        public EDialogueVariableType variableType;
 
         /// <summary> 默认浮点 </summary>
         [SerializeField]

@@ -41,12 +41,12 @@ namespace Miemie.DialogSystem.Editor
             leftSplitter = CreateSplitter("dialog-left-splitter", ResizeTarget.Left);
             rowElement.Add(leftSplitter);
 
-            parametersPanelContainer = CreatePanelContainer("dialog-parameters-panel", DialogueGraphParametersPanel.Draw, isLeft: true);
-            parametersPanelContainer.style.borderRightWidth = 0;
-            rowElement.Add(parametersPanelContainer);
+            variablesPanelContainer = CreatePanelContainer("dialog-variables-panel", DialogueGraphVariablesPanel.Draw, isLeft: true);
+            variablesPanelContainer.style.borderRightWidth = 0;
+            rowElement.Add(variablesPanelContainer);
 
-            parametersSplitter = CreateSplitter("dialog-parameters-splitter", ResizeTarget.Parameters);
-            rowElement.Add(parametersSplitter);
+            variablesSplitter = CreateSplitter("dialog-variables-splitter", ResizeTarget.Variables);
+            rowElement.Add(variablesSplitter);
 
             graphPanel = new VisualElement { name = "dialog-graph-panel" };
             graphPanel.style.flexGrow = 1;
@@ -149,11 +149,11 @@ namespace Miemie.DialogSystem.Editor
             rootVisualElement.style.height = position.height;
             rowElement.style.height = rowElement.style.minHeight = rowHeight;
             leftPanelContainer.style.height = rowHeight;
-            parametersPanelContainer.style.height = rowHeight;
+            variablesPanelContainer.style.height = rowHeight;
             rightPanelContainer.style.height = rowHeight;
             graphPanel.style.height = rowHeight;
             leftSplitter.style.height = rowHeight;
-            parametersSplitter.style.height = rowHeight;
+            variablesSplitter.style.height = rowHeight;
             rightSplitter.style.height = rowHeight;
             ApplyPanelWidths(position.width);
         }
@@ -164,35 +164,35 @@ namespace Miemie.DialogSystem.Editor
             float availableWidth = Mathf.Max(1f, windowWidth - splitterTotal);
             float minGraphWidth = Mathf.Min(DialogueGraphEditorConstants.MinGraphPanelWidth, Mathf.Max(140f, availableWidth * 0.35f));
             float minLeftWidth = Mathf.Min(DialogueGraphEditorConstants.MinMenuPanelWidth, availableWidth * 0.28f);
-            float minParamsWidth = Mathf.Min(DialogueGraphEditorConstants.MinParametersPanelWidth, availableWidth * 0.18f);
+            float minVariablesWidth = Mathf.Min(DialogueGraphEditorConstants.MinVariablesPanelWidth, availableWidth * 0.18f);
             float minRightWidth = Mathf.Min(DialogueGraphEditorConstants.MinInspectorPanelWidth, availableWidth * 0.32f);
 
             leftPanelWidth = Mathf.Max(leftPanelWidth, minLeftWidth);
-            parametersPanelWidth = Mathf.Max(parametersPanelWidth, minParamsWidth);
+            variablesPanelWidth = Mathf.Max(variablesPanelWidth, minVariablesWidth);
             rightPanelWidth = Mathf.Max(rightPanelWidth, minRightWidth);
 
-            float overflow = leftPanelWidth + parametersPanelWidth + rightPanelWidth + minGraphWidth - availableWidth;
+            float overflow = leftPanelWidth + variablesPanelWidth + rightPanelWidth + minGraphWidth - availableWidth;
             if (overflow > 0f)
             {
                 rightPanelWidth -= Mathf.Min(overflow, rightPanelWidth - minRightWidth);
-                overflow = leftPanelWidth + parametersPanelWidth + rightPanelWidth + minGraphWidth - availableWidth;
+                overflow = leftPanelWidth + variablesPanelWidth + rightPanelWidth + minGraphWidth - availableWidth;
             }
 
             if (overflow > 0f)
             {
-                parametersPanelWidth -= Mathf.Min(overflow, parametersPanelWidth - minParamsWidth);
-                overflow = leftPanelWidth + parametersPanelWidth + rightPanelWidth + minGraphWidth - availableWidth;
+                variablesPanelWidth -= Mathf.Min(overflow, variablesPanelWidth - minVariablesWidth);
+                overflow = leftPanelWidth + variablesPanelWidth + rightPanelWidth + minGraphWidth - availableWidth;
             }
 
             if (overflow > 0f)
                 leftPanelWidth -= Mathf.Min(overflow, leftPanelWidth - minLeftWidth);
 
             leftPanelWidth = Mathf.Clamp(leftPanelWidth, minLeftWidth, availableWidth);
-            parametersPanelWidth = Mathf.Clamp(parametersPanelWidth, minParamsWidth, availableWidth);
+            variablesPanelWidth = Mathf.Clamp(variablesPanelWidth, minVariablesWidth, availableWidth);
             rightPanelWidth = Mathf.Clamp(rightPanelWidth, minRightWidth, availableWidth);
 
             leftPanelContainer.style.width = leftPanelWidth;
-            parametersPanelContainer.style.width = parametersPanelWidth;
+            variablesPanelContainer.style.width = variablesPanelWidth;
             rightPanelContainer.style.width = rightPanelWidth;
         }
 
@@ -206,7 +206,7 @@ namespace Miemie.DialogSystem.Editor
             resizeStartWidth = target switch
             {
                 ResizeTarget.Left => leftPanelWidth,
-                ResizeTarget.Parameters => parametersPanelWidth,
+                ResizeTarget.Variables => variablesPanelWidth,
                 _ => rightPanelWidth,
             };
             splitter.CaptureMouse();
@@ -224,8 +224,8 @@ namespace Miemie.DialogSystem.Editor
                 case ResizeTarget.Left:
                     leftPanelWidth = resizeStartWidth + delta;
                     break;
-                case ResizeTarget.Parameters:
-                    parametersPanelWidth = resizeStartWidth + delta;
+                case ResizeTarget.Variables:
+                    variablesPanelWidth = resizeStartWidth + delta;
                     break;
                 default:
                     rightPanelWidth = resizeStartWidth - delta;
@@ -249,7 +249,7 @@ namespace Miemie.DialogSystem.Editor
         {
             activeResize = ResizeTarget.None;
             leftSplitter?.ReleaseMouse();
-            parametersSplitter?.ReleaseMouse();
+            variablesSplitter?.ReleaseMouse();
             rightSplitter?.ReleaseMouse();
             graphView?.ReleaseInteractionCapture();
         }

@@ -106,23 +106,23 @@ namespace Miemie.DialogSystem.Editor
 
         static void DrawConditionRow(DialogueGraph graph, SerializedProperty conditionProp)
         {
-            var keyProp = conditionProp.FindPropertyRelative("key");
+            var variableNameProp = conditionProp.FindPropertyRelative("variableName");
             var typeProp = conditionProp.FindPropertyRelative("eCondition");
             var floatProp = conditionProp.FindPropertyRelative("targetFloat");
             var intProp = conditionProp.FindPropertyRelative("targetInt");
 
-            string newKey = DialogueGraphParametersDrawer.DrawParameterPopup(graph, keyProp.stringValue);
-            keyProp.stringValue = newKey;
+            string newName = DialogueGraphVariablesDrawer.DrawVariablePopup(graph, variableNameProp.stringValue);
+            variableNameProp.stringValue = newName;
 
-            var paramDef = graph?.FindParameter(newKey);
-            if (paramDef == null)
+            var variableDef = graph?.FindVariable(newName);
+            if (variableDef == null)
             {
                 var current = (ECondition)typeProp.intValue;
                 typeProp.intValue = (int)(ECondition)EditorGUILayout.EnumPopup("条件", current);
             }
             else
             {
-                var options = DialogueConditionEditorUtility.GetConditionOptions(paramDef.parameterType);
+                var options = DialogueConditionEditorUtility.GetConditionOptions(variableDef.variableType);
                 var currentType = (ECondition)typeProp.intValue;
 
                 int currentIndex = System.Array.IndexOf(options, currentType);
@@ -150,14 +150,14 @@ namespace Miemie.DialogSystem.Editor
             conditionsProp.InsertArrayElementAtIndex(index);
             var conditionProp = conditionsProp.GetArrayElementAtIndex(index);
 
-            string defaultKey = graph?.Parameters != null && graph.Parameters.Count > 0
-                ? graph.Parameters[0]?.name ?? string.Empty
+            string defaultName = graph?.Variables != null && graph.Variables.Count > 0
+                ? graph.Variables[0]?.name ?? string.Empty
                 : string.Empty;
 
-            conditionProp.FindPropertyRelative("key").stringValue = defaultKey;
-            var paramDef = graph?.FindParameter(defaultKey);
-            var defaultType = paramDef != null
-                ? DialogueConditionEditorUtility.GetConditionOptions(paramDef.parameterType)[0]
+            conditionProp.FindPropertyRelative("variableName").stringValue = defaultName;
+            var variableDef = graph?.FindVariable(defaultName);
+            var defaultType = variableDef != null
+                ? DialogueConditionEditorUtility.GetConditionOptions(variableDef.variableType)[0]
                 : ECondition.None;
             conditionProp.FindPropertyRelative("eCondition").intValue = (int)defaultType;
         }

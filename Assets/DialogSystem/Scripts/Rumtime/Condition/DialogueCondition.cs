@@ -6,51 +6,51 @@ namespace Miemie.DialogSystem
 {
     /// <summary>
     /// 对话条件
-    /// 也就是当你点击某根线以后右侧面板上点击添加条件按钮出现的参数
+    /// 连线上的一条判断规则
     /// </summary>
     [Serializable]
     public class DialogueCondition
     {
-        /// <summary> 参数名 </summary>
-        public string key;
+        /// <summary> 变量名 </summary>
+        public string variableName;
+
         /// <summary> 条件类型 </summary>
         public ECondition eCondition;
-        /// <summary> 浮点阈值 </summary>
+
+        /// <summary> 浮点目标值 </summary>
         [ShowIf(nameof(IsFloatCondition))]
         public float targetFloat;
 
-        /// <summary> 整数阈值 </summary>
+        /// <summary> 整数目标值 </summary>
         [ShowIf(nameof(IsIntCondition))]
         public int targetInt;
 
         /// <summary> 无条件 </summary>
         public bool NoneContion => eCondition == ECondition.None;
 
-        /// <summary> 是否是浮点数条件 </summary>
         bool IsFloatCondition => eCondition is ECondition.FloatGreater or ECondition.FloatLess;
 
-        /// <summary> 是否是整数条件 </summary>
         bool IsIntCondition => eCondition is ECondition.IntGreater or ECondition.IntLess
             or ECondition.IntEquals or ECondition.IntNotEquals;
 
         /// <summary>
         /// 判断条件是否满足
         /// </summary>
-        public bool MeetCondition(DialogueVariables vars)
+        public bool MeetCondition(DialogueVariablesStore variables)
         {
-            if (NoneContion || vars == null)
+            if (NoneContion || variables == null)
                 return true;
 
             return eCondition switch
             {
-                ECondition.BoolTrue => vars.GetBool(key),
-                ECondition.BoolFalse => !vars.GetBool(key),
-                ECondition.FloatGreater => vars.GetFloat(key) > targetFloat,
-                ECondition.FloatLess => vars.GetFloat(key) < targetFloat,
-                ECondition.IntGreater => vars.GetInt(key) > targetInt,
-                ECondition.IntLess => vars.GetInt(key) < targetInt,
-                ECondition.IntEquals => vars.GetInt(key) == targetInt,
-                ECondition.IntNotEquals => vars.GetInt(key) != targetInt,
+                ECondition.BoolTrue => variables.GetBool(variableName),
+                ECondition.BoolFalse => !variables.GetBool(variableName),
+                ECondition.FloatGreater => variables.GetFloat(variableName) > targetFloat,
+                ECondition.FloatLess => variables.GetFloat(variableName) < targetFloat,
+                ECondition.IntGreater => variables.GetInt(variableName) > targetInt,
+                ECondition.IntLess => variables.GetInt(variableName) < targetInt,
+                ECondition.IntEquals => variables.GetInt(variableName) == targetInt,
+                ECondition.IntNotEquals => variables.GetInt(variableName) != targetInt,
                 _ => false,
             };
         }

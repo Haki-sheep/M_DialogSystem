@@ -18,17 +18,18 @@ MonoBehaviour:
   dialogText: "\u6211\u662F\u73A9\u5BB6"
   isOptionNode: 0
   nextTransition:
+    labelText: 
     toNode: {fileID: 11400000, guid: a1415e40fc5b2e7439f04834ce44f39c, type: 2}
     conditionList:
-    - key: New Bool
-      eCondition: 1
-      targetFloat: 0
+    - variableName: Gold
+      eCondition: 10
+      targetFloat: 1
       targetInt: 0
   choiceList:
   - labelText: "\u9009\u98791"
     toNode: {fileID: 11400000, guid: a1415e40fc5b2e7439f04834ce44f39c, type: 2}
     conditionList:
-    - key: New Float
+    - variableName: 
       eCondition: 10
       targetFloat: 1
       targetInt: 0

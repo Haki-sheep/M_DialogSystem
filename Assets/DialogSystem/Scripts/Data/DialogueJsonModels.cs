@@ -26,23 +26,27 @@ namespace Miemie.DialogSystem
         /// <summary> 对话节点列表 </summary>
         public List<DialogueNodeJson> nodes = new();
 
-        /// <summary> 公共参数 </summary>
-        public List<DialogueParameterJson> parameters = new();
+        /// <summary> 图变量声明 </summary>
+        public List<DialogueVariableJson> variables = new();
     }
 
     /// <summary>
-    /// 对话参数Json类
+    /// 对话变量Json类
     /// </summary>
-    public class DialogueParameterJson
+    public class DialogueVariableJson
     {
-        /// <summary> 参数名 </summary>
+        /// <summary> 变量名 </summary>
         public string name;
-        /// <summary> 参数类型 </summary>
-        public string parameterType;
+
+        /// <summary> 变量类型 </summary>
+        public string variableType;
+
         /// <summary> 默认浮点 </summary>
         public float defaultFloat;
+
         /// <summary> 默认整数 </summary>
         public int defaultInt;
+
         /// <summary> 默认布尔 </summary>
         public bool defaultBool;
     }
@@ -93,10 +97,13 @@ namespace Miemie.DialogSystem
     {
         /// <summary> 条件类型 </summary>
         public string conditionType;
-        /// <summary> 条件键 </summary>
-        public string key;
+
+        /// <summary> 变量名 </summary>
+        public string variableName;
+
         /// <summary> 目标浮点值 </summary>
         public float targetFloat;
+
         /// <summary> 目标整数值 </summary>
         public int targetInt;
     }

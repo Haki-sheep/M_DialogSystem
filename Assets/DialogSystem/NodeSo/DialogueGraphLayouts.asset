@@ -15,11 +15,9 @@ MonoBehaviour:
   graphs:
   - graph: {fileID: 11400000, guid: cd88d187e7a48214182d2970038cb14a, type: 2}
     layouts:
-    - node: {fileID: 11400000, guid: a1415e40fc5b2e7439f04834ce44f39c, type: 2}
-      position: {x: 240.00003, y: -11.428572}
     - node: {fileID: 11400000, guid: 67231b5ba10cd3d4c879c8fb548580ed, type: 2}
-      position: {x: 488, y: -26.857143}
+      position: {x: 510.2857, y: 9.142857}
     - node: {fileID: 11400000, guid: 132043c61f731e04da43aac35b89eda1, type: 2}
-      position: {x: 488.00003, y: 78.28572}
+      position: {x: 496, y: 141.14285}
     - node: {fileID: 11400000, guid: 842567a2da928914db95046849048c2c, type: 2}
-      position: {x: -6.2857056, y: -10.285713}
+      position: {x: 20, y: 85.14285}

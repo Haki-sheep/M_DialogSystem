@@ -6,43 +6,43 @@ using UnityEngine;
 namespace Miemie.DialogSystem.Editor
 {
     /// <summary>
-    /// 对话图 Parameters 面板绘制
+    /// 对话图 Variables 面板绘制
     /// </summary>
-    static class DialogueGraphParametersDrawer
+    static class DialogueGraphVariablesDrawer
     {
         public static void Draw(DialogueGraph graph, ref Vector2 scroll, float panelWidth)
         {
             if (graph == null)
             {
-                EditorGUILayout.LabelField("选中一张对话图以编辑 Parameters", EditorStyles.wordWrappedLabel);
+                EditorGUILayout.LabelField("选中一张对话图以编辑 Variables", EditorStyles.wordWrappedLabel);
                 return;
             }
 
             var so = new SerializedObject(graph);
-            var parametersProp = so.FindProperty("parameterList");
+            var variableListProp = so.FindProperty("variableList");
 
             scroll = EditorGUILayout.BeginScrollView(scroll, false, true, GUILayout.Width(panelWidth - 16f));
-            if (parametersProp != null)
+            if (variableListProp != null)
             {
-                for (int i = 0; i < parametersProp.arraySize; i++)
+                for (int i = 0; i < variableListProp.arraySize; i++)
                 {
-                    var element = parametersProp.GetArrayElementAtIndex(i);
-                    DrawParameterBlock(element, parametersProp, i);
+                    var element = variableListProp.GetArrayElementAtIndex(i);
+                    DrawVariableBlock(element, variableListProp, i);
                     EditorGUILayout.Space(4);
                 }
             }
             EditorGUILayout.EndScrollView();
 
-            if (GUILayout.Button("+ 添加参数"))
-                ShowAddParameterMenu(graph, parametersProp);
+            if (GUILayout.Button("+ 添加变量"))
+                ShowAddVariableMenu(graph, variableListProp);
 
             so.ApplyModifiedProperties();
         }
 
-        static void DrawParameterBlock(SerializedProperty element, SerializedProperty listProp, int index)
+        static void DrawVariableBlock(SerializedProperty element, SerializedProperty listProp, int index)
         {
             var nameProp = element.FindPropertyRelative("name");
-            var typeProp = element.FindPropertyRelative("parameterType");
+            var typeProp = element.FindPropertyRelative("variableType");
             var floatProp = element.FindPropertyRelative("defaultFloat");
             var intProp = element.FindPropertyRelative("defaultInt");
             var boolProp = element.FindPropertyRelative("defaultBool");
@@ -61,18 +61,18 @@ namespace Miemie.DialogSystem.Editor
             }
             EditorGUILayout.EndHorizontal();
 
-            var newType = (EDialogueParameterType)EditorGUILayout.EnumPopup("类型", (EDialogueParameterType)typeProp.enumValueIndex);
+            var newType = (EDialogueVariableType)EditorGUILayout.EnumPopup("类型", (EDialogueVariableType)typeProp.enumValueIndex);
             typeProp.enumValueIndex = (int)newType;
 
             switch (newType)
             {
-                case EDialogueParameterType.Float:
+                case EDialogueVariableType.Float:
                     floatProp.floatValue = EditorGUILayout.FloatField("默认值", floatProp.floatValue);
                     break;
-                case EDialogueParameterType.Int:
+                case EDialogueVariableType.Int:
                     intProp.intValue = EditorGUILayout.IntField("默认值", intProp.intValue);
                     break;
-                case EDialogueParameterType.Bool:
+                case EDialogueVariableType.Bool:
                     boolProp.boolValue = EditorGUILayout.Toggle("默认值", boolProp.boolValue);
                     break;
             }
@@ -80,27 +80,27 @@ namespace Miemie.DialogSystem.Editor
             EditorGUILayout.EndVertical();
         }
 
-        static void ShowAddParameterMenu(DialogueGraph graph, SerializedProperty parametersProp)
+        static void ShowAddVariableMenu(DialogueGraph graph, SerializedProperty variableListProp)
         {
             var menu = new GenericMenu();
-            menu.AddItem(new GUIContent("Float"), false, () => AddParameter(graph, parametersProp, EDialogueParameterType.Float));
-            menu.AddItem(new GUIContent("Int"), false, () => AddParameter(graph, parametersProp, EDialogueParameterType.Int));
-            menu.AddItem(new GUIContent("Bool"), false, () => AddParameter(graph, parametersProp, EDialogueParameterType.Bool));
+            menu.AddItem(new GUIContent("Float"), false, () => AddVariable(graph, variableListProp, EDialogueVariableType.Float));
+            menu.AddItem(new GUIContent("Int"), false, () => AddVariable(graph, variableListProp, EDialogueVariableType.Int));
+            menu.AddItem(new GUIContent("Bool"), false, () => AddVariable(graph, variableListProp, EDialogueVariableType.Bool));
             menu.ShowAsContext();
         }
 
-        static void AddParameter(DialogueGraph graph, SerializedProperty parametersProp, EDialogueParameterType type)
+        static void AddVariable(DialogueGraph graph, SerializedProperty variableListProp, EDialogueVariableType type)
         {
-            if (parametersProp == null)
+            if (variableListProp == null)
                 return;
 
-            var so = parametersProp.serializedObject;
-            int index = parametersProp.arraySize;
-            parametersProp.InsertArrayElementAtIndex(index);
+            var so = variableListProp.serializedObject;
+            int index = variableListProp.arraySize;
+            variableListProp.InsertArrayElementAtIndex(index);
 
-            var element = parametersProp.GetArrayElementAtIndex(index);
+            var element = variableListProp.GetArrayElementAtIndex(index);
             element.FindPropertyRelative("name").stringValue = GenerateUniqueName(graph, type);
-            element.FindPropertyRelative("parameterType").enumValueIndex = (int)type;
+            element.FindPropertyRelative("variableType").enumValueIndex = (int)type;
             element.FindPropertyRelative("defaultFloat").floatValue = 0f;
             element.FindPropertyRelative("defaultInt").intValue = 0;
             element.FindPropertyRelative("defaultBool").boolValue = false;
@@ -109,23 +109,23 @@ namespace Miemie.DialogSystem.Editor
             EditorUtility.SetDirty(graph);
         }
 
-        static string GenerateUniqueName(DialogueGraph graph, EDialogueParameterType type)
+        static string GenerateUniqueName(DialogueGraph graph, EDialogueVariableType type)
         {
             string prefix = type switch
             {
-                EDialogueParameterType.Float => "New Float",
-                EDialogueParameterType.Int => "New Int",
-                EDialogueParameterType.Bool => "New Bool",
-                _ => "New Param",
+                EDialogueVariableType.Float => "New Float",
+                EDialogueVariableType.Int => "New Int",
+                EDialogueVariableType.Bool => "New Bool",
+                _ => "New Variable",
             };
 
             var used = new HashSet<string>();
-            if (graph.Parameters != null)
+            if (graph.Variables != null)
             {
-                foreach (var param in graph.Parameters)
+                foreach (var def in graph.Variables)
                 {
-                    if (param != null && !string.IsNullOrEmpty(param.name))
-                        used.Add(param.name);
+                    if (def != null && !string.IsNullOrEmpty(def.name))
+                        used.Add(def.name);
                 }
             }
 
@@ -141,28 +141,28 @@ namespace Miemie.DialogSystem.Editor
         }
 
         /// <summary>
-        /// 获取参数名下拉
+        /// 变量名下拉
         /// </summary>
-        public static string DrawParameterPopup(DialogueGraph graph, string currentKey)
+        public static string DrawVariablePopup(DialogueGraph graph, string currentName)
         {
-            if (graph?.Parameters == null || graph.Parameters.Count == 0)
-                return EditorGUILayout.TextField("参数", currentKey);
+            if (graph?.Variables == null || graph.Variables.Count == 0)
+                return EditorGUILayout.TextField("变量", currentName);
 
             var names = new List<string> { "(无)" };
             int selected = 0;
 
-            for (int i = 0; i < graph.Parameters.Count; i++)
+            for (int i = 0; i < graph.Variables.Count; i++)
             {
-                var param = graph.Parameters[i];
-                if (param == null || string.IsNullOrEmpty(param.name))
+                var def = graph.Variables[i];
+                if (def == null || string.IsNullOrEmpty(def.name))
                     continue;
 
-                names.Add(param.name);
-                if (param.name == currentKey)
+                names.Add(def.name);
+                if (def.name == currentName)
                     selected = names.Count - 1;
             }
 
-            int newIndex = EditorGUILayout.Popup("参数", selected, names.ToArray());
+            int newIndex = EditorGUILayout.Popup("变量", selected, names.ToArray());
             return newIndex <= 0 ? string.Empty : names[newIndex];
         }
     }

@@ -12,7 +12,7 @@ namespace Miemie.DialogSystem.Editor
     /// </summary>
     public partial class DialogueGraphEditorWindow : EditorWindow
     {
-        internal enum ResizeTarget { None, Left, Parameters, Right }
+        internal enum ResizeTarget { None, Left, Variables, Right }
 
         OdinMenuTree menuTree;
 
@@ -20,10 +20,10 @@ namespace Miemie.DialogSystem.Editor
         VisualElement rowElement;
         VisualElement graphPanel;
         VisualElement leftSplitter;
-        VisualElement parametersSplitter;
+        VisualElement variablesSplitter;
         VisualElement rightSplitter;
         IMGUIContainer leftPanelContainer;
-        IMGUIContainer parametersPanelContainer;
+        IMGUIContainer variablesPanelContainer;
         IMGUIContainer rightPanelContainer;
 
         PropertyTree inspectorTree;
@@ -34,9 +34,9 @@ namespace Miemie.DialogSystem.Editor
         string renameBuffer = "";
         UnityEngine.Object renameTarget;
         Vector2 inspectorScroll;
-        Vector2 parametersScroll;
+        Vector2 variablesScroll;
         float leftPanelWidth = DialogueGraphEditorConstants.MenuPanelWidth;
-        float parametersPanelWidth = DialogueGraphEditorConstants.ParametersPanelWidth;
+        float variablesPanelWidth = DialogueGraphEditorConstants.VariablesPanelWidth;
         float rightPanelWidth = DialogueGraphEditorConstants.InspectorPanelWidth;
         float resizeStartX;
         float resizeStartWidth;
@@ -57,7 +57,7 @@ namespace Miemie.DialogSystem.Editor
         internal DialogueGraphView GraphView => graphView;
         internal DialogueGraph LastSelectedGraph => lastSelectedGraph;
         internal DialogueTransitionHandle SelectedTransition => selectedTransition;
-        internal Vector2 ParametersScroll { get => parametersScroll; set => parametersScroll = value; }
+        internal Vector2 VariablesScroll { get => variablesScroll; set => variablesScroll = value; }
         internal Vector2 InspectorScroll { get => inspectorScroll; set => inspectorScroll = value; }
         internal string RenameBuffer { get => renameBuffer; set => renameBuffer = value; }
         internal UnityEngine.Object RenameTarget => renameTarget;
@@ -194,7 +194,7 @@ namespace Miemie.DialogSystem.Editor
         internal void ClearLastSyncedSelection() => lastSyncedSelection = null;
 
         internal float GetLeftPanelWidth() => GetPanelWidth(leftPanelContainer, leftPanelWidth, DialogueGraphEditorConstants.MinMenuPanelWidth);
-        internal float GetParametersPanelWidth() => GetPanelWidth(parametersPanelContainer, parametersPanelWidth, DialogueGraphEditorConstants.MinParametersPanelWidth);
+        internal float GetVariablesPanelWidth() => GetPanelWidth(variablesPanelContainer, variablesPanelWidth, DialogueGraphEditorConstants.MinVariablesPanelWidth);
         internal float GetRightPanelWidth() => GetPanelWidth(rightPanelContainer, rightPanelWidth, DialogueGraphEditorConstants.MinInspectorPanelWidth);
 
         float GetPanelWidth(IMGUIContainer container, float fallback, float minWidth)

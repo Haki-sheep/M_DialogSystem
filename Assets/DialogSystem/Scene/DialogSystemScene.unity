@@ -371,9 +371,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: variableList
+    - Name: variables
       Entry: 7
-      Data: 0|Miemie.DialogSystem.DialogueVariables, Assembly-CSharp
+      Data: 0|Miemie.DialogSystem.DialogueVariablesStore, Assembly-CSharp
     - Name: boolDict
       Entry: 7
       Data: 1|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Boolean,
@@ -683,6 +683,22 @@ PrefabInstance:
     - target: {fileID: 4960467860673152877, guid: 290ca1d95bf27884fbf9c265307b239a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7934454466279272472, guid: 290ca1d95bf27884fbf9c265307b239a, type: 3}
+      propertyPath: m_Color.a
+      value: 0.101960786
+      objectReference: {fileID: 0}
+    - target: {fileID: 7934454466279272472, guid: 290ca1d95bf27884fbf9c265307b239a, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7934454466279272472, guid: 290ca1d95bf27884fbf9c265307b239a, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7934454466279272472, guid: 290ca1d95bf27884fbf9c265307b239a, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8817687283915991344, guid: 290ca1d95bf27884fbf9c265307b239a, type: 3}
       propertyPath: m_Name
