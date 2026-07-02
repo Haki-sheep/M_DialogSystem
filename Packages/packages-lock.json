@@ -8,6 +8,13 @@
         "com.unity.test-framework": "1.1.9"
       }
     },
+    "com.cysharp.unitask": {
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "e5acc106ee196bc5a32fb14cdf2987b0f96d11e0"
+    },
     "com.hakisheep.mm-eventbus": {
       "version": "git@github.com:Haki-sheep/MmCSharp-EventBus.git?path=unity",
       "depth": 0,

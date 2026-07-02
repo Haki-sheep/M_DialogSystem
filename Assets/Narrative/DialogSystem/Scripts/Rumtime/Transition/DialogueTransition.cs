@@ -15,6 +15,9 @@ namespace Miemie.DialogSystem
         /// <summary> 选项文本 普通跳转可留空 </summary>
         public string labelText;
 
+        /// <summary> 对话事件Key </summary>
+        public string eventKey;
+
         /// <summary> 跳向的节点 </summary>
         public DialogueNode toNode;
 

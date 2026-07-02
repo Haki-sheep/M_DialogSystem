@@ -1,15 +1,33 @@
 using System.Collections.Generic;
-using Miemie.DialogSystem;
+using System.Threading;
 using UnityEngine;
 
 namespace Miemie.DialogSystem.Quest
 {
-  public class QuestManager : MonoBehaviour
+  public partial class QuestManager : MonoBehaviour
   {
-    [Header("拖 Quest 例如 QuestSo/TestKillSlimeQuest")]
-    [SerializeField] List<Quest> questList = new();
+    [Header("任务列表")]
+    [SerializeField]
+    private List<Quest> questList = new();
 
-    readonly Dictionary<int, QuestState> states = new();
+    [Header("存档")]
+    [SerializeField]
+    private bool loadSaveOnStart = true;
+
+    /// <summary>
+    /// 任务运行时字典
+    /// </summary>
+    private readonly Dictionary<int, QuestRuntimeState> stateDict = new();
+
+    /// <summary>
+    /// 执行中任务列表
+    /// </summary>
+    private readonly List<QuestRuntimeState> activeQuestList = new();
+
+    /// <summary>
+    /// 限时取消字典
+    /// </summary>
+    private readonly Dictionary<int, CancellationTokenSource> timeLimitDict = new();
 
     public static QuestManager Instance { get; private set; }
 
@@ -17,230 +35,173 @@ namespace Miemie.DialogSystem.Quest
 
     #region 生命周期
 
-    void Awake()
+    /// <summary>
+    /// 单例初始化
+    /// </summary>
+    private void Awake()
     {
       if (Instance != null && Instance != this) { Destroy(gameObject); return; }
       Instance = this;
     }
 
-    void OnDestroy() { if (Instance == this) Instance = null; }
-
-    void OnEnable() => Subscribe(true);
-    void OnDisable() => Subscribe(false);
-
-    void Start()
+    /// <summary>
+    /// 订阅玩法事件
+    /// </summary>
+    private void OnEnable()
     {
-      foreach (var quest in questList)
-      {
-        if (quest == null) continue;
-        states[quest.QuestId] = new QuestState(quest);
-        if (states[quest.QuestId].objectives.Count == 0)
-          Debug.LogWarning($"[Quest] {quest.Title} 无目标 请在 objectiveList 添加步骤");
-      }
-      if (states.Count == 0)
-        Debug.LogWarning("[Quest] questList 为空 请拖入 TestKillSlimeQuest");
-
-      RefreshAvailable();
-      foreach (var s in states.Values)
-        if (s.quest.AcceptMode == EQuestAcceptMode.系统派发) Accept(s.quest.QuestId);
+      ListenGameEvents();
     }
 
-    void Update()
+    /// <summary>
+    /// 取消订阅玩法事件
+    /// </summary>
+    private void OnDisable()
     {
-      float now = Time.time;
-      foreach (var s in states.Values)
-      {
-        if (s.state != EQuestState.执行中 || !s.quest.HasTimeLimit) continue;
-        if (now - s.acceptedAt < s.quest.TimeLimit) continue;
-        Fail(s.quest.QuestId);
-      }
+      StopListenGameEvents();
+      StopAllTimeLimit();
+    }
+
+    /// <summary>
+    /// 清空单例
+    /// </summary>
+    private void OnDestroy()
+    {
+      if (Instance == this) Instance = null;
+    }
+
+    /// <summary>
+    /// 初始化并派发系统任务
+    /// </summary>
+    private void Start()
+    {
+      BuildRuntimeState();
+
+      bool loadedSave = loadSaveOnStart && LoadQuests();
+
+      RefreshAvailable();
+
+      if (!loadedSave)
+        AcceptSystemQuests();
     }
 
     #endregion
 
     #region 公开接口
 
+    /// <summary>
+    /// 接受或重接任务
+    /// </summary>
     public bool Accept(int questId)
     {
-      if (!states.TryGetValue(questId, out var s)) return false;
-      if (s.state != EQuestState.可用 && s.state != EQuestState.提交 && s.state != EQuestState.失败) return false;
-      s.ResetProgress();
-      s.state = EQuestState.执行中;
-      s.acceptedAt = Time.time;
-      GameEventBus.Bus.TriggerEvent(GameEventKey.QuestAccepted, questId);
-      return true;
-    }
+      if (!stateDict.TryGetValue(questId, out var runtime)) return false;
+      if (runtime.eQuestState != EQuestState.可用
+          && runtime.eQuestState != EQuestState.提交
+          && runtime.eQuestState != EQuestState.失败) return false;
 
-    public bool Fail(int questId)
-    {
-      if (!states.TryGetValue(questId, out var s) || s.state != EQuestState.执行中) return false;
-      s.state = EQuestState.失败;
-      GameEventBus.Bus.TriggerEvent(GameEventKey.QuestFailed, questId);
+      CancelTimeLimit(questId);
+      RemoveActive(runtime);
+      runtime.ResetProgress();
+      runtime.eQuestState = EQuestState.执行中;
+      runtime.acceptedAt = Time.time;
+      activeQuestList.Add(runtime);
+
+      if (runtime.quest.HasTimeLimit)
+        StartTimeLimit(questId, runtime.quest.TimeLimit);
+
+      NotifyAccepted(runtime);
       return true;
     }
 
     /// <summary>
-    /// 提交任务 目标须全部完成
+    /// 标记失败
+    /// </summary>
+    public bool Fail(int questId)
+    {
+      if (!stateDict.TryGetValue(questId, out var runtime)) return false;
+      if (runtime.eQuestState != EQuestState.执行中) return false;
+
+      CancelTimeLimit(questId);
+      RemoveActive(runtime);
+      runtime.eQuestState = EQuestState.失败;
+      NotifyFailed(runtime);
+      return true;
+    }
+
+    /// <summary>
+    /// 提交任务
     /// </summary>
     public bool Submit(int questId) => TrySubmit(questId);
 
     /// <summary>
-    /// 尝试提交 目标未做完则不变状态
+    /// 尝试提交
     /// </summary>
     public bool TrySubmit(int questId)
     {
-      if (!states.TryGetValue(questId, out var s) || s.state != EQuestState.执行中) return false;
-      if (!s.AllDone()) return false;
-      Resolve(s);
-      return s.state == EQuestState.提交;
+      if (!stateDict.TryGetValue(questId, out var runtime)) return false;
+      if (runtime.eQuestState != EQuestState.执行中) return false;
+      if (!runtime.AllDone()) return false;
+
+      CompleteQuest(runtime);
+      return runtime.eQuestState == EQuestState.提交;
     }
 
+#if UNITY_EDITOR
     /// <summary>
-    /// GM 直接提交 填满进度
+    /// GM 直接提交
     /// </summary>
     public bool GmSubmit(int questId)
     {
-      if (!states.TryGetValue(questId, out var s) || s.state != EQuestState.执行中) return false;
-      for (int i = 0; i < s.objectives.Count; i++)
+      if (!stateDict.TryGetValue(questId, out var runtime)) return false;
+      if (runtime.eQuestState != EQuestState.执行中) return false;
+
+      for (int i = 0; i < runtime.objectiveList.Count; i++)
       {
-        if (s.objectives[i] == null) continue;
-        s.progress[i] = s.objectives[i].count > 0 ? s.objectives[i].count : 1;
+        if (runtime.objectiveList[i] == null) continue;
+        int need = runtime.objectiveList[i].count > 0 ? runtime.objectiveList[i].count : 1;
+        runtime.progressList[i] = need;
+        NotifyProgressChanged(runtime, i, need, need);
       }
-      Resolve(s);
-      return s.state == EQuestState.提交;
+
+      CompleteQuest(runtime);
+      return runtime.eQuestState == EQuestState.提交;
+    }
+#endif
+
+    /// <summary>
+    /// 查询状态
+    /// </summary>
+    public EQuestState GetState(int questId)
+    {
+      if (!stateDict.TryGetValue(questId, out var runtime)) return EQuestState.未激活;
+      return runtime.eQuestState;
     }
 
-    public EQuestState GetState(int questId) =>
-      states.TryGetValue(questId, out var s) ? s.state : EQuestState.未激活;
+    /// <summary>
+    /// 查询任务定义
+    /// </summary>
+    public Quest GetQuest(int questId)
+    {
+      if (!stateDict.TryGetValue(questId, out var runtime)) return null;
+      return runtime.quest;
+    }
 
-    public int GetObjectiveCount(int questId) =>
-      states.TryGetValue(questId, out var s) ? s.objectives.Count : 0;
+    /// <summary>
+    /// 查询目标数量
+    /// </summary>
+    public int GetObjectiveCount(int questId)
+    {
+      if (!stateDict.TryGetValue(questId, out var runtime)) return 0;
+      return runtime.objectiveList.Count;
+    }
 
+    /// <summary>
+    /// 查询目标进度
+    /// </summary>
     public int GetObjectiveProgress(int questId, int index)
     {
-      if (!states.TryGetValue(questId, out var s)) return 0;
-      if (index < 0 || index >= s.progress.Count) return 0;
-      return s.progress[index];
-    }
-
-    #endregion
-
-    #region 事件
-
-    void Subscribe(bool on)
-    {
-      var bus = GameEventBus.Bus;
-      if (on)
-      {
-        bus.AddEventListener<DialogueFinishedPayload>(GameEventKey.DialogueGraphFinished, OnDialogue);
-        bus.AddEventListener<EnemyKilledPayload>(GameEventKey.EnemyKilled, OnKill);
-        bus.AddEventListener<ItemCollectedPayload>(GameEventKey.ItemCollected, OnCollect);
-        bus.AddEventListener<ZoneEnteredPayload>(GameEventKey.ZoneEntered, OnReach);
-      }
-      else
-      {
-        bus.RemoveListener<DialogueFinishedPayload>(GameEventKey.DialogueGraphFinished, OnDialogue);
-        bus.RemoveListener<EnemyKilledPayload>(GameEventKey.EnemyKilled, OnKill);
-        bus.RemoveListener<ItemCollectedPayload>(GameEventKey.ItemCollected, OnCollect);
-        bus.RemoveListener<ZoneEnteredPayload>(GameEventKey.ZoneEntered, OnReach);
-      }
-    }
-
-    void OnDialogue(DialogueFinishedPayload p) =>
-      Advance(EQuestObjectiveType.对话, p.graphId, null, 1);
-
-    void OnKill(EnemyKilledPayload p) =>
-      Advance(EQuestObjectiveType.击杀, 0, p.enemyKey, p.count > 0 ? p.count : 1);
-
-    void OnCollect(ItemCollectedPayload p) =>
-      Advance(EQuestObjectiveType.收集, 0, p.itemKey, p.count > 0 ? p.count : 1);
-
-    void OnReach(ZoneEnteredPayload p) =>
-      Advance(EQuestObjectiveType.到达, 0, p.zoneKey, 1);
-
-    #endregion
-
-    #region 推进
-
-    void RefreshAvailable()
-    {
-      foreach (var s in states.Values)
-      {
-        if (s.state != EQuestState.未激活) continue;
-        bool ok = true;
-        foreach (int id in s.quest.PrerequisiteIdList)
-          if (GetState(id) != EQuestState.提交) { ok = false; break; }
-        if (ok) s.state = EQuestState.可用;
-      }
-    }
-
-    void Advance(EQuestObjectiveType type, int targetId, string targetKey, int delta)
-    {
-      foreach (var s in states.Values)
-      {
-        if (s.state != EQuestState.执行中) continue;
-
-        for (int i = 0; i < s.objectives.Count; i++)
-        {
-          var o = s.objectives[i];
-          if (o == null || o.type != type || !Match(o, targetId, targetKey)) continue;
-          int need = o.count > 0 ? o.count : 1;
-          if (s.progress[i] >= need) continue;
-          s.progress[i] = Mathf.Min(s.progress[i] + delta, need);
-        }
-      }
-    }
-
-    static bool Match(QuestObjective o, int targetId, string targetKey) =>
-      o.type == EQuestObjectiveType.对话
-        ? o.targetId == targetId
-        : !string.IsNullOrEmpty(o.targetKey) && o.targetKey == targetKey;
-
-    void Resolve(QuestState s)
-    {
-      if (!s.AllDone()) return;
-      if (s.state != EQuestState.执行中) return;
-      s.state = EQuestState.提交;
-      Debug.Log($"[Quest] 提交 {s.quest.Title} (id={s.quest.QuestId})");
-      GameEventBus.Bus.TriggerEvent(GameEventKey.QuestCompleted, s.quest.QuestId);
-      RefreshAvailable();
-    }
-
-    #endregion
-
-    #region 运行时状态
-
-    sealed class QuestState
-    {
-      public readonly Quest quest;
-      public readonly List<QuestObjective> objectives;
-      public readonly List<int> progress = new();
-      public EQuestState state = EQuestState.未激活;
-      public float acceptedAt;
-
-      public QuestState(Quest quest)
-      {
-        this.quest = quest;
-        objectives = new List<QuestObjective>(quest.GetObjectives());
-        for (int i = 0; i < objectives.Count; i++) progress.Add(0);
-      }
-
-      public bool AllDone()
-      {
-        for (int i = 0; i < objectives.Count; i++)
-        {
-          if (objectives[i] == null) continue;
-          int need = objectives[i].count > 0 ? objectives[i].count : 1;
-          if (progress[i] < need) return false;
-        }
-        return true;
-      }
-
-      public void ResetProgress()
-      {
-        for (int i = 0; i < progress.Count; i++)
-          progress[i] = 0;
-      }
+      if (!stateDict.TryGetValue(questId, out var runtime)) return 0;
+      if (index < 0 || index >= runtime.progressList.Count) return 0;
+      return runtime.progressList[index];
     }
 
     #endregion

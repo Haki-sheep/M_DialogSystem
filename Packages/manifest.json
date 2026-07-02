@@ -1,7 +1,8 @@
 {
   "dependencies": {
-    "com.hakisheep.mm-eventbus": "git@github.com:Haki-sheep/MmCSharp-EventBus.git?path=unity",
     "com.boxqkrtm.ide.cursor": "file:E:/AAAA学习资料/辅助技术与资源/Cursor/com.unity.ide.cursor-master/com.unity.ide.cursor-master",
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+    "com.hakisheep.mm-eventbus": "git@github.com:Haki-sheep/MmCSharp-EventBus.git?path=unity",
     "com.unity.collab-proxy": "2.11.4",
     "com.unity.feature.development": "1.0.1",
     "com.unity.nuget.newtonsoft-json": "3.2.2",

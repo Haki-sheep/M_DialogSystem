@@ -18,5 +18,11 @@ MonoBehaviour:
   description: 
   acceptMode: 1
   timeLimit: 0
-  objectiveList: []
-  prerequisiteIdList: 
+  objectiveList:
+  - type: 0
+    targetKey: 
+    dialogueGraph: {fileID: 0}
+    dialogueEventKey: GraphFinished
+    count: 0
+    description: 
+  prerequisiteIdList: 00000000

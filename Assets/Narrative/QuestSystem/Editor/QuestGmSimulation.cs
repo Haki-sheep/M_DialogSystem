@@ -9,10 +9,13 @@ namespace Miemie.DialogSystem.Quest.Editor
   /// </summary>
   static class QuestGmSimulation
   {
-    public static string ButtonLabel(QuestObjective o)
+    /// <summary>
+    /// 模拟按钮显示文本
+    /// </summary>
+    public static string ButtonLabel(QuestObjective objective)
     {
-      if (o == null) return "模拟";
-      return o.type switch
+      if (objective == null) return "模拟";
+      return objective.type switch
       {
         EQuestObjectiveType.对话 => "对话",
         EQuestObjectiveType.击杀 => "击杀",
@@ -22,26 +25,25 @@ namespace Miemie.DialogSystem.Quest.Editor
       };
     }
 
-    public static void FireOnce(QuestObjective o)
+    /// <summary>
+    /// 按目标类型触发一次游戏事件
+    /// </summary>
+    public static void FireOnce(QuestObjective objective)
     {
-      if (o == null) return;
-      switch (o.type)
+      if (objective == null) return;
+      switch (objective.type)
       {
         case EQuestObjectiveType.对话:
-          GameEventBus.Bus.TriggerEvent(GameEventKey.DialogueGraphFinished,
-            new DialogueFinishedPayload { graphId = o.targetId });
+          GameNotify.DialogueEvent(objective.dialogueGraph, objective.dialogueEventKey);
           break;
         case EQuestObjectiveType.击杀:
-          GameEventBus.Bus.TriggerEvent(GameEventKey.EnemyKilled,
-            new EnemyKilledPayload { enemyKey = o.targetKey, count = 1 });
+          GameNotify.Kill(objective.targetKey);
           break;
         case EQuestObjectiveType.收集:
-          GameEventBus.Bus.TriggerEvent(GameEventKey.ItemCollected,
-            new ItemCollectedPayload { itemKey = o.targetKey, count = 1 });
+          GameNotify.Collect(objective.targetKey);
           break;
         case EQuestObjectiveType.到达:
-          GameEventBus.Bus.TriggerEvent(GameEventKey.ZoneEntered,
-            new ZoneEnteredPayload { zoneKey = o.targetKey });
+          GameNotify.EnterZone(objective.targetKey);
           break;
       }
     }

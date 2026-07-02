@@ -131,13 +131,19 @@ namespace Miemie.DialogSystem
             RefreshAvailableChoices();
             if (index < 0 || index >= availableChoiceList.Count) return;
 
-            GoTo(availableChoiceList[index].toNode);
+            var choice = availableChoiceList[index];
+            if (!string.IsNullOrEmpty(choice.eventKey))
+                GameNotify.DialogueEvent(dialogueGraph, choice.eventKey);
+
+            GoTo(choice.toNode);
         }
 
         void EndDialog()
         {
             Debug.Log("对话结束");
             currentNode = null;
+            if (dialogueGraph != null)
+                GameNotify.DialogueFinished(dialogueGraph);
         }
 
         #endregion

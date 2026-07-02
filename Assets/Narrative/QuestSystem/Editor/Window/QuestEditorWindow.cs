@@ -13,16 +13,19 @@ namespace Miemie.DialogSystem.Quest.Editor
   /// </summary>
   public class QuestEditorWindow : EditorWindow
   {
-    enum Tab { 配置, GM }
+    private enum Tab { 配置, GM }
 
-    Tab tab = Tab.配置;
-    OdinMenuTree menuTree;
-    Quest selectedQuest;
-    Vector2 gmScroll;
-    readonly Dictionary<int, string> gmTipDict = new();
+    private Tab tab = Tab.配置;
+    private OdinMenuTree menuTree;
+    private Quest selectedQuest;
+    private Vector2 gmScroll;
+    private readonly Dictionary<int, string> gmTipDict = new();
 
+    /// <summary>
+    /// 打开任务编辑器窗口
+    /// </summary>
     [MenuItem("Tools/MmQuestWindow")]
-    static void Open()
+    private static void Open()
     {
       var w = GetWindow<QuestEditorWindow>();
       w.titleContent = new GUIContent("Quest System");
@@ -30,19 +33,28 @@ namespace Miemie.DialogSystem.Quest.Editor
       w.Show();
     }
 
-    void OnEnable()
+    /// <summary>
+    /// 窗口启用时重建菜单
+    /// </summary>
+    private void OnEnable()
     {
       EditorApplication.projectChanged += RebuildMenuTree;
       RebuildMenuTree();
     }
 
-    void OnDisable()
+    /// <summary>
+    /// 窗口关闭时释放资源
+    /// </summary>
+    private void OnDisable()
     {
       EditorApplication.projectChanged -= RebuildMenuTree;
       menuTree = null;
     }
 
-    void OnGUI()
+    /// <summary>
+    /// 绘制主界面
+    /// </summary>
+    private void OnGUI()
     {
       tab = (Tab)GUILayout.Toolbar((int)tab, new[] { "配置", "GM" });
       EditorGUILayout.Space(4);
@@ -55,7 +67,10 @@ namespace Miemie.DialogSystem.Quest.Editor
 
     #region 配置
 
-    void DrawConfigTab()
+    /// <summary>
+    /// 绘制配置页
+    /// </summary>
+    private void DrawConfigTab()
     {
       EditorGUILayout.BeginHorizontal();
       if (GUILayout.Button("新建任务", GUILayout.Width(80)))
@@ -82,7 +97,10 @@ namespace Miemie.DialogSystem.Quest.Editor
       EditorGUILayout.EndHorizontal();
     }
 
-    void DrawSelectedQuestInspector()
+    /// <summary>
+    /// 绘制选中任务属性
+    /// </summary>
+    private void DrawSelectedQuestInspector()
     {
       if (selectedQuest == null)
       {
@@ -103,7 +121,10 @@ namespace Miemie.DialogSystem.Quest.Editor
       so.ApplyModifiedProperties();
     }
 
-    void RebuildMenuTree()
+    /// <summary>
+    /// 重建左侧任务菜单树
+    /// </summary>
+    private void RebuildMenuTree()
     {
       menuTree = new OdinMenuTree(false)
       {
@@ -133,7 +154,10 @@ namespace Miemie.DialogSystem.Quest.Editor
       }
     }
 
-    void CreateQuest()
+    /// <summary>
+    /// 新建任务资产
+    /// </summary>
+    private void CreateQuest()
     {
       QuestEditorPaths.EnsureQuestFolder();
       string path = AssetDatabase.GenerateUniqueAssetPath($"{QuestEditorPaths.QuestAssetPath}/New Quest.asset");
@@ -149,7 +173,10 @@ namespace Miemie.DialogSystem.Quest.Editor
 
     #region GM
 
-    void DrawGmTab()
+    /// <summary>
+    /// 绘制 GM 调试页
+    /// </summary>
+    private void DrawGmTab()
     {
       if (!Application.isPlaying)
       {
@@ -183,11 +210,17 @@ namespace Miemie.DialogSystem.Quest.Editor
         Repaint();
     }
 
-    void DrawQuestGmRow(QuestManager mgr, Quest quest)
+    /// <summary>
+    /// 绘制单个任务的 GM 行
+    /// </summary>
+    private void DrawQuestGmRow(QuestManager mgr, Quest quest)
     {
       EditorGUILayout.BeginVertical("box");
       var state = mgr.GetState(quest.QuestId);
       string stateText = state == EQuestState.提交 ? "已完成" : state.ToString();
+      string timeText = TimeText(mgr, quest, state);
+      if (!string.IsNullOrEmpty(timeText))
+        stateText = $"{stateText}  {timeText}";
       EditorGUILayout.LabelField($"[{quest.QuestId}] {quest.Title}  —  {stateText}", EditorStyles.boldLabel);
 
       var objectives = quest.GetObjectives();
@@ -242,13 +275,45 @@ namespace Miemie.DialogSystem.Quest.Editor
       EditorGUILayout.Space(4);
     }
 
-    static bool CanAccept(EQuestState state) =>
+    /// <summary>
+    /// 当前状态是否可接受
+    /// </summary>
+    private static bool CanAccept(EQuestState state) =>
       state is EQuestState.可用 or EQuestState.提交 or EQuestState.失败;
 
-    static string ObjectiveHint(QuestObjective o)
+    /// <summary>
+    /// 目标匹配提示文本
+    /// </summary>
+    private static string ObjectiveHint(QuestObjective o)
     {
       if (o == null) return "";
-      return o.type == EQuestObjectiveType.对话 ? o.targetId.ToString() : o.targetKey;
+      if (o.type != EQuestObjectiveType.对话) return o.targetKey;
+
+      string graphName = o.dialogueGraph != null ? o.dialogueGraph.name : "未选择对话图";
+      return $"{graphName} / {o.dialogueEventKey}";
+    }
+
+    /// <summary>
+    /// 限时任务显示文本
+    /// </summary>
+    private static string TimeText(QuestManager mgr, Quest quest, EQuestState state)
+    {
+      if (!quest.HasTimeLimit) return "";
+      if (state != EQuestState.执行中) return $"限时 {FormatTime(quest.TimeLimit)}";
+
+      float remainSeconds = mgr.GetQuestRemainSeconds(quest.QuestId);
+      return $"剩余 {FormatTime(remainSeconds)}";
+    }
+
+    /// <summary>
+    /// 格式化时间
+    /// </summary>
+    private static string FormatTime(float seconds)
+    {
+      int totalSeconds = Mathf.Max(0, Mathf.CeilToInt(seconds));
+      int minute = totalSeconds / 60;
+      int second = totalSeconds % 60;
+      return $"{minute:00}:{second:00}";
     }
 
     #endregion

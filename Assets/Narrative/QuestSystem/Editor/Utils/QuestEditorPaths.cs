@@ -11,6 +11,9 @@ namespace Miemie.DialogSystem.Quest.Editor
   {
     public const string QuestAssetPath = "Assets/Narrative/QuestSystem/QuestSo";
 
+    /// <summary>
+    /// 确保任务资产目录存在
+    /// </summary>
     public static void EnsureQuestFolder()
     {
       if (AssetDatabase.IsValidFolder(QuestAssetPath))
