@@ -11,5 +11,6 @@ namespace Miemie.DialogSystem
         ZoneEntered,
         QuestAccepted,
         QuestCompleted,
+        QuestFailed,
     }
 }

@@ -152,8 +152,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22df546fcddf3594d8ff17a897e98f67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questDefList:
-  - {fileID: 11400000, guid: d36ba80eadca69945b1fa9af905bfec4, type: 2}
+  questList:
+  - {fileID: 11400000, guid: c3d4e5f6789012345678901234abcdef, type: 2}
+  - {fileID: 11400000, guid: e1f2a3b4c5d6789012345678abcdef01, type: 2}
+  - {fileID: 11400000, guid: 1a2b3c4d5e6f708192a3b4c5d6e7f809, type: 2}
+  - {fileID: 11400000, guid: 1a2b3c4d5e6f708192a3b4c5d6e7f80a, type: 2}
+  - {fileID: 11400000, guid: 1a2b3c4d5e6f708192a3b4c5d6e7f80b, type: 2}
+  - {fileID: 11400000, guid: 1a2b3c4d5e6f708192a3b4c5d6e7f80c, type: 2}
+  - {fileID: 11400000, guid: 1a2b3c4d5e6f708192a3b4c5d6e7f80d, type: 2}
 --- !u!4 &483014804
 Transform:
   m_ObjectHideFlags: 0
@@ -182,11 +188,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyKey: Slime
+  wolfKey: Wolf
+  bossKey: Boss
   itemKey: Herb
   zoneKey: Forest
+  dialogueGraphId: 100
   killKey: 107
   collectKey: 108
   zoneKeyCode: 106
+  dialogueKey: 116
+  wolfKillKey: 117
+  bossKillKey: 105
 --- !u!1 &898088180
 GameObject:
   m_ObjectHideFlags: 0

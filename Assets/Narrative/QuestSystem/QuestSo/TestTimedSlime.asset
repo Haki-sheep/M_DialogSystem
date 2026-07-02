@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8e3c1a29b4d6e7f8a0b1c2d3e4f5a6b, type: 3}
+  m_Name: TestTimedSlime
+  m_EditorClassIdentifier: 
+  questId: 5
+  category: 0
+  title: "\u9650\u65F6\u51FB\u6740\u53F2\u83B1\u59C6"
+  description: "30 \u79D2\u5185\u6309 K \u51FB\u6740 \u5426\u5219\u5931\u8D25"
+  acceptMode: 0
+  timeLimit: 30
+  objectiveList:
+  - type: 1
+    targetId: 0
+    targetKey: Slime
+    count: 1
+    description: "\u51FB\u6740 Slime"
+  prerequisiteIdList: []
