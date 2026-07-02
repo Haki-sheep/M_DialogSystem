@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6976766230584515067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90092d9305ad1b34bbe41079c5235dfa, type: 3}
+  m_Name: QuestNode_3
+  m_EditorClassIdentifier: 
+  nodeId: 3
+  nodeType: 3
+  objective:
+    objectiveType: 0
+    targetId: 0
+    targetKey: 
+    requiredCount: 1
+    description: 
+  nextTransition:
+    toNode: {fileID: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a34cbdc17a5ec8144b26589e333426c5, type: 3}
+  m_Name: DemoKillSlimeGraph
+  m_EditorClassIdentifier: 
+  questGraphId: 1
+  questDef: {fileID: 11400000, guid: d36ba80eadca69945b1fa9af905bfec4, type: 2}
+  startNode: {fileID: 3696910815024437649}
+  nodeList:
+  - {fileID: 3696910815024437649}
+  - {fileID: 7692323043325814403}
+  - {fileID: -6976766230584515067}
+--- !u!114 &3696910815024437649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90092d9305ad1b34bbe41079c5235dfa, type: 3}
+  m_Name: QuestNode_1
+  m_EditorClassIdentifier: 
+  nodeId: 1
+  nodeType: 0
+  objective:
+    objectiveType: 0
+    targetId: 0
+    targetKey: 
+    requiredCount: 1
+    description: 
+  nextTransition:
+    toNode: {fileID: 7692323043325814403}
+--- !u!114 &7692323043325814403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90092d9305ad1b34bbe41079c5235dfa, type: 3}
+  m_Name: QuestNode_2
+  m_EditorClassIdentifier: 
+  nodeId: 2
+  nodeType: 1
+  objective:
+    objectiveType: 1
+    targetId: 0
+    targetKey: Slime
+    requiredCount: 1
+    description: "\u51FB\u6740 Slime"
+  nextTransition:
+    toNode: {fileID: -6976766230584515067}
