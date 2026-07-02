@@ -5,31 +5,37 @@ namespace Miemie.DialogSystem.Quest
 {
     /// <summary>
     /// 任务定义
-    /// 有 QuestGraph 时以图内 Objective 节点为准
     /// </summary>
     [CreateAssetMenu(fileName = "New Quest", menuName = "Quest System/Quest")]
     public class QuestDef : ScriptableObject
     {
+        /// <summary> 任务ID </summary>
         [SerializeField]
-        int questId;
+        private int questId;
 
+        /// <summary> 任务标题 </summary>
         [SerializeField]
-        string questTitle;
+        private string questTitle;
 
+        /// <summary> 任务描述 </summary>
         [SerializeField, TextArea]
-        string questDescription;
+        private string questDescription;
 
+        /// <summary> 所以属任务图 </summary>
         [SerializeField]
-        QuestGraph questGraph;
+        private QuestGraph questGraph;
 
+        /// <summary> 前置任务ID列表 </summary>
         [SerializeField]
-        List<int> prerequisiteQuestIdList = new();
+        private List<int> prerequisiteQuestIdList = new();
 
+        /// <summary> 是否自动接受 </summary>
         [SerializeField]
-        bool autoAccept;
+        private bool autoAccept;
 
+        /// <summary> 回退目标列表 </summary>
         [SerializeField]
-        List<QuestObjectiveDef> fallbackObjectiveList = new();
+        private List<QuestObjectiveDef> fallbackObjectiveList = new();
 
         public int QuestId => questId;
         public string QuestTitle => questTitle;

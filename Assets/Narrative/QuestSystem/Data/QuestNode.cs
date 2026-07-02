@@ -8,17 +8,21 @@ namespace Miemie.DialogSystem.Quest
     [CreateAssetMenu(fileName = "New Quest Node", menuName = "Quest System/Quest Node")]
     public class QuestNode : ScriptableObject
     {
+        /// <summary> 节点ID </summary>
         [SerializeField]
-        int nodeId;
+        private int nodeId;
 
+        /// <summary> 节点类型 </summary>
         [SerializeField]
-        EQuestNodeType nodeType;
+        private EQuestNodeType nodeType;
 
+        /// <summary> 任务目标定义 </summary>
         [SerializeField]
-        QuestObjectiveDef objective = new();
+        private QuestObjectiveDef objective = new();
 
+        /// <summary> 任务流程跳转 </summary>
         [SerializeField]
-        QuestFlowTransition nextTransition = new();
+        private QuestFlowTransition nextTransition = new();
 
         public int NodeId => nodeId;
         public EQuestNodeType NodeType => nodeType;

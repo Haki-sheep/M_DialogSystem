@@ -9,17 +9,21 @@ namespace Miemie.DialogSystem.Quest
     [CreateAssetMenu(fileName = "New Quest Graph", menuName = "Quest System/Quest Graph")]
     public class QuestGraph : ScriptableObject
     {
+        /// <summary> 任务流程图ID </summary>
         [SerializeField]
-        int questGraphId;
+        private int questGraphId;
 
+        /// <summary> 所属任务定义 </summary>
         [SerializeField]
-        QuestDef questDef;
+        private QuestDef questDef;
 
+        /// <summary> 起始节点 </summary>
         [SerializeField]
-        QuestNode startNode;
+        private QuestNode startNode;
 
+        /// <summary> 节点列表 </summary>
         [SerializeField]
-        List<QuestNode> nodeList = new();
+        private List<QuestNode> nodeList = new();
 
         public int QuestGraphId => questGraphId;
         public QuestDef QuestDef => questDef;

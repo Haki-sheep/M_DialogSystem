@@ -12,13 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: QuestGraphLayouts
   m_EditorClassIdentifier: Assembly-CSharp-Editor:Miemie.DialogSystem.Quest.Editor:QuestGraphLayoutStore/QuestGraphLayoutAsset
-  entryList:
-  - graph: {fileID: 11400000, guid: 7bae115587faece47abbd32cccf5064e, type: 2}
-    node: {fileID: -6976766230584515067, guid: 7bae115587faece47abbd32cccf5064e, type: 2}
-    position: {x: 367.42856, y: 121.14285}
-  - graph: {fileID: 11400000, guid: 7bae115587faece47abbd32cccf5064e, type: 2}
-    node: {fileID: 7692323043325814403, guid: 7bae115587faece47abbd32cccf5064e, type: 2}
-    position: {x: 202.85715, y: 121.14285}
-  - graph: {fileID: 11400000, guid: 7bae115587faece47abbd32cccf5064e, type: 2}
-    node: {fileID: 3696910815024437649, guid: 7bae115587faece47abbd32cccf5064e, type: 2}
-    position: {x: 63.428574, y: 121.14285}
+  entryList: []
